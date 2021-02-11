@@ -1,0 +1,8 @@
+# editor, IDE files
+.idea/
+
+# python files
+*.pyc
+
+# coverage
+.coverage

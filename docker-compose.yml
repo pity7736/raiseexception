@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  raise_exception:
+    image: raise_exception_web
+    build:
+      context: .
+      target: web
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENVIRONMENT=dev
+    command: python main.py
+    volumes:
+      - .:/code/

@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: install dependencies
-          command: pip install -r requirements_dev.txt
+          command: pip install -r requirements_dev.txt -r requirements.txt
       - run:
           name: xenon
           command: sh run_xenon.sh

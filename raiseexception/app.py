@@ -1,6 +1,7 @@
 import os
 
 from starlette.applications import Starlette
+from starlette.responses import JSONResponse
 from starlette.routing import Route
 from starlette.templating import Jinja2Templates
 
@@ -12,8 +13,13 @@ def index(request):
     return templates.TemplateResponse('index.html', {'request': request})
 
 
+async def test(request):
+    return JSONResponse({'hi': 'world'})
+
+
 routes = (
     Route('/', index),
+    Route('/test', test)
 )
 
 app = Starlette(debug=True, routes=routes)

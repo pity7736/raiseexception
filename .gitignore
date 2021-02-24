@@ -6,3 +6,8 @@
 
 # coverage
 .coverage
+
+# front
+/package-lock.json
+/node_modules/
+/raiseexception/templates/css/

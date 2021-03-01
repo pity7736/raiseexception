@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "postcss raiseexception/templates/style.css --output raiseexception/templates/css/styles.css",
-    "build": "NODE_ENV=production postcss raiseexception/templates/style.css --output raiseexception/templates/css/styles.css",
-    "watch": "postcss raiseexception/templates/style.css --output raiseexception/templates/css/styles.css --watch"
+    "dev": "postcss raiseexception/templates/style.css --output raiseexception/templates/static/css/styles.css",
+    "build": "NODE_ENV=production postcss raiseexception/templates/style.css --output raiseexception/templates/static/css/styles.css",
+    "watch": "postcss raiseexception/templates/style.css --output raiseexception/templates/static/css/styles.css --watch"
   },
   "repository": {
     "type": "git",

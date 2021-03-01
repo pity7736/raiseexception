@@ -9,4 +9,4 @@ def test_homepage():
 
     assert response.status_code == 200
     assert response.template.name == 'index.html'
-    assert "<title>Julián Cortés' website</title>" in response.text
+    assert "<title>Julián Cortés' personal website</title>" in response.text

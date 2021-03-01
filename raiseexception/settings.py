@@ -1,0 +1,5 @@
+import os
+
+
+APP_ENVIRONMENT = os.environ['APP_ENVIRONMENT']
+DEBUG = APP_ENVIRONMENT == 'dev'

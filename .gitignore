@@ -10,4 +10,4 @@
 # front
 /package-lock.json
 /node_modules/
-/raiseexception/templates/css/
+/raiseexception/templates/static/

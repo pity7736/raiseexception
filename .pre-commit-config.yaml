@@ -18,4 +18,4 @@ repos:
         name: tests
         entry: run_tests.sh
         language: script
-        types: [python]
+        types_or: [python, html]

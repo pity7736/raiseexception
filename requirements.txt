@@ -1,3 +1,4 @@
+-e git+http://github.com/pity7736/kinton-orm.git#egg=kinton
 Jinja2==2.11.3
 starlette==0.14.2
 uvicorn==0.13.4

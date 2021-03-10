@@ -1,3 +1,4 @@
+import os
 from unittest.mock import AsyncMock
 
 import asyncpg
@@ -6,6 +7,16 @@ from asyncpg.transaction import Transaction
 from pytest import fixture
 
 from raiseexception import settings
+
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+@fixture(scope='session')
+def schema():
+    with open(f'{CURRENT_DIR}/db.sql') as f:
+        result = f.read()
+    return result
 
 
 @fixture(scope='session')
@@ -32,10 +43,11 @@ async def db_pool(session_mocker):
 
 
 @fixture
-async def db_connection(db_pool):
+async def db_connection(db_pool, schema):
     connection: Connection = await db_pool.acquire()
     transaction: Transaction = connection.transaction()
     await transaction.start()
+    await connection.execute(schema)
     yield connection
     print('doing rollback')
     await transaction.rollback()

@@ -2,13 +2,13 @@ version: 2
 jobs:
   web:
     docker:
-      - image: circleci/python:3.9
+      - image: juliancortes77/raiseexception:dev
+        auth:
+          username: juliancortes77
+          password: $DOCKERHUB_PASSWORD
     working_directory: ~/nyoibo
     steps:
       - checkout
-      - run:
-          name: install dependencies
-          command: pip install -r requirements_dev.txt -r requirements.txt
       - run:
           name: xenon
           command: sh run_xenon.sh

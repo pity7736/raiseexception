@@ -2,7 +2,7 @@ version: 2
 jobs:
   web:
     docker:
-      - image: juliancortes77/raiseexception:dev
+      - image: juliancortes77/raiseexception:latest
         auth:
           username: juliancortes77
           password: $DOCKERHUB_PASSWORD

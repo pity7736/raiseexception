@@ -6,7 +6,7 @@ jobs:
         auth:
           username: juliancortes77
           password: $DOCKERHUB_PASSWORD
-    working_directory: ~/raiseexception
+    working_directory: ~/code
     steps:
       - checkout
       - run:

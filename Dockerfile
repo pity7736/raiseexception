@@ -5,6 +5,7 @@ ENV CODE=/code
 WORKDIR $CODE
 
 COPY requirements.txt .
+COPY .env .
 RUN apt-get update && apt-get -y upgrade
 RUN pip install -r requirements.txt
 

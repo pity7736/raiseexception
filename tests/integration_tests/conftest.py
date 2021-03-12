@@ -1,5 +1,5 @@
 import os
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 
 import asyncpg
 from asyncpg import Pool, Connection
@@ -21,6 +21,7 @@ def schema():
 
 @fixture(scope='session')
 async def db_pool(session_mocker):
+    print()
     pool: Pool = await asyncpg.create_pool(
         host=settings.DB_HOST,
         user=settings.DB_USER,
@@ -43,14 +44,23 @@ async def db_pool(session_mocker):
 
 
 @fixture
-async def db_connection(db_pool, schema):
+async def db_connection(db_pool, schema, mocker):
     connection: Connection = await db_pool.acquire()
     transaction: Transaction = connection.transaction()
     await transaction.start()
+    connect_mock = mocker.patch.object(
+        asyncpg,
+        'connect',
+        new_callable=AsyncMock
+    )
+    connect_mock.return_value = connection
+    close_mock = patch.object(Connection, 'close', new_callable=AsyncMock)
+    close_mock.start()
     await connection.execute(schema)
     yield connection
     print('doing rollback')
     await transaction.rollback()
     print('rollback done!')
     print('releasing connection')
+    close_mock.stop()
     await db_pool.release(connection)

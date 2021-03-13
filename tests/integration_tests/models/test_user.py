@@ -1,5 +1,3 @@
-import base64
-
 from pytest import mark
 
 from raiseexception.accounts.models import User
@@ -20,17 +18,14 @@ password_params = (
 async def test_create_user(password, hashed_password, db_connection, mocker):
     random_mock = mocker.patch('raiseexception.utils.crypto.get_random_string')
     salt = 'HjIQUM3X9KUAnlmGxDKGjdzGy8wPrFsK'
-    bytes_salt = bytes(salt, 'utf-8')
     random_mock.return_value = salt
-
     user = await User.create(
         username='__pity__',
         email='test@email.com',
         password=password
     )
     user_fetched = await db_connection.fetchrow('select * from users')
-    encoded_salt = base64.b64encode(bytes_salt).decode()
 
     assert user_fetched['username'] == user.username
     assert user_fetched['email'] == user.email
-    assert user_fetched['password'] == f'{encoded_salt}${hashed_password}'
+    assert user_fetched['password'] == f'{salt}${hashed_password}'

@@ -21,5 +21,4 @@ def make_password(value):
         p=1
     )
     password_encoded = base64.b64encode(password_hash)
-    salt_encoded = base64.b64encode(salt.encode())
-    return f'{salt_encoded.decode()}${password_encoded.decode()}'
+    return f'{salt}${password_encoded.decode()}'

@@ -10,6 +10,9 @@ password_params = (
         ')?,R)@RW?A!DT-cpS?Ft_#[vib-fEN*zHMJEnUq_)Lz#tgFL7:KT{[D6u&B*#_dR',
         '0hzC83Pm062omy8dF9Uhn1kbtkALdvNriy6rRXB7rQI='
     ),
+    ('salt$passwor1', 'GkjXFa5m4ENJ2ZY+/u+06wLjRxE5gEwxkmkenVP5qzE='),
+    ('unknown$salt$passwor1', 'SMjga2wEIe2EQqMRBJjDH1duG3g+p3cJiBuU6mbRik4='),
+
 )
 
 
@@ -24,8 +27,8 @@ async def test_create_user(password, hashed_password, db_connection, mocker):
         email='test@email.com',
         password=password
     )
-    user_fetched = await db_connection.fetchrow('select * from users')
+    user_fetched = await User.get(username=user.username)
 
-    assert user_fetched['username'] == user.username
-    assert user_fetched['email'] == user.email
-    assert user_fetched['password'] == f'{salt}${hashed_password}'
+    assert user_fetched.username == user.username
+    assert user_fetched.email == user.email
+    assert user_fetched.password == f'{salt}${hashed_password}'

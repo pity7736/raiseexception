@@ -15,7 +15,6 @@ DB_PASSWORD = os.environ['KINTON_PASSWORD']
 DB_PORT = os.environ['KINTON_PORT']
 
 # crypto
-UNKNOWN_PASSWORD_WORD = os.environ['UNKNOWN_PASSWORD_WORD']
 SESSION_TOKEN_LENGTH = 64
 
 # html

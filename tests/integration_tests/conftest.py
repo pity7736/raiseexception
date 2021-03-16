@@ -5,9 +5,9 @@ import asyncpg
 from asyncpg import Pool, Connection
 from asyncpg.transaction import Transaction
 from pytest import fixture
+from starlette.testclient import TestClient
 
-from raiseexception import settings
-
+from raiseexception import settings, app
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -64,3 +64,8 @@ async def db_connection(db_pool, schema, mocker):
     print('releasing connection')
     close_mock.stop()
     await db_pool.release(connection)
+
+
+@fixture
+def test_client():
+    return TestClient(app=app)

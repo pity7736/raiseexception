@@ -1,11 +1,6 @@
-from starlette.testclient import TestClient
 
-from raiseexception.app import app
-
-
-def test_homepage():
-    client = TestClient(app=app)
-    response = client.get("/")
+def test_homepage(test_client):
+    response = test_client.get("/")
 
     assert response.status_code == 200
     assert response.template.name == 'index.html'

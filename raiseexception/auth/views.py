@@ -1,18 +1,41 @@
 from starlette.applications import Starlette
+from starlette.responses import RedirectResponse
 from starlette.routing import Route
 
 from raiseexception import settings
+from raiseexception.accounts.models import User
+from raiseexception.auth.controllers import login
 
 
-def login_view(request):
+async def login_view(request):
+    status_code = 200
+    if request.method == 'POST':
+        status_code = 401
+        data = await request.form()
+        username = data.get('username')
+        password = data.get('password')
+        user = await User.get(username=username)
+        token = await login(user=user, password=password)
+        response = RedirectResponse(url='/')
+        if token:
+            response.set_cookie(
+                key='__Host-raiseexception-session',
+                value=token.value,
+                domain='testserver.local',
+                secure=True,
+                httponly=True,
+                samesite='strict'
+            )
+            return response
     return settings.TEMPLATE.TemplateResponse(
         '/auth/login.html',
-        {'request': request}
+        {'request': request},
+        status_code=status_code
     )
 
 
 routes = (
-    Route('/login', login_view),
+    Route('/login', login_view, methods=['GET', 'POST']),
 )
 
 auth_views = Starlette(routes=routes)

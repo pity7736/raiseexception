@@ -28,3 +28,14 @@ async def test_create_user(password, hashed_password, db_connection, mocker):
     assert user_fetched.username == user.username
     assert user_fetched.email == user.email
     assert user_fetched.password == f'{salt}${hashed_password}'
+
+
+@mark.asyncio
+async def test_compare_just_created_user(db_connection, mocker):
+    random_mock = mocker.patch('raiseexception.utils.crypto.get_random_string')
+    salt = 'HjIQUM3X9KUAnlmGxDKGjdzGy8wPrFsK'
+    random_mock.return_value = salt
+    user = await UserFactory.create()
+    hashed_password = 'O2dmIBHo97eOO72wy0appi/JPQhxmew+hGJHlYv0ic4='
+
+    assert user.password == f'{salt}${hashed_password}'

@@ -1,22 +1,20 @@
-import os
-
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
-from starlette.templating import Jinja2Templates
 
 from raiseexception import settings
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEMPLATE_DIR = f'{BASE_DIR}/templates'
-templates = Jinja2Templates(directory=TEMPLATE_DIR)
+from raiseexception.auth.views import auth_views
 
 
 def index(request):
-    return templates.TemplateResponse('index.html', {'request': request})
+    return settings.TEMPLATE.TemplateResponse(
+        'index.html',
+        {'request': request}
+    )
 
 
 routes = [
     Route('/', index),
+    Mount('/auth', routes=auth_views.routes)
 ]
 
 if settings.APP_ENVIRONMENT == 'dev':
@@ -24,11 +22,13 @@ if settings.APP_ENVIRONMENT == 'dev':
     routes.extend((
         Mount(
             '/static',
-            app=StaticFiles(directory=f'{TEMPLATE_DIR}/static'), name='static'
+            app=StaticFiles(directory=settings.STATIC_DIR),
+            name='static'
         ),
         Mount(
             '/media',
-            app=StaticFiles(directory=f'{TEMPLATE_DIR}/media'), name='media'
+            app=StaticFiles(directory=settings.MEDIA_DIR),
+            name='media'
         )
     ))
 

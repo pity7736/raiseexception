@@ -17,3 +17,6 @@ class User(Model):
             self._password = make_password(value)
         else:
             self._password = value
+
+    def get_password_salt(self):
+        return self._password.split('$')[0]

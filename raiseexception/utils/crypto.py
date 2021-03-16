@@ -10,8 +10,8 @@ def get_random_string(length=16, allowed_chars=None):
     return ''.join(secrets.choice(allowed_chars) for _ in range(length))
 
 
-def make_password(value):
-    salt = get_random_string(32)
+def make_password(value, salt=None):
+    salt = salt or get_random_string(32)
     password_hash = scrypt(
         password=value,
         salt=salt,

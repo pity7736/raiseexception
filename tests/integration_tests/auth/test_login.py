@@ -1,21 +1,16 @@
 from pytest import mark
 
 from raiseexception import settings
-from raiseexception.accounts.models import User
 from raiseexception.auth.controllers import login
 from raiseexception.auth.models import Token
+from tests.factories import UserFactory
 
 
 @mark.asyncio
 async def test_success(db_connection):
-    password = 'test password'
-    user = await User.create(
-        username='__pity__',
-        email='test@email.com',
-        password=password
-    )
+    user = await UserFactory.create()
 
-    token = await login(user=user, password=password)
+    token = await login(user=user, password=UserFactory.password)
 
     assert isinstance(token, Token)
     assert token.value
@@ -25,13 +20,9 @@ async def test_success(db_connection):
 
 @mark.asyncio
 async def test_fail(db_connection):
-    password = 'test password'
-    user = await User.create(
-        username='__pity__',
-        email='test@email.com',
-        password=password
+    user = await UserFactory.create()
+    token = await login(
+        user=user,
+        password=UserFactory.password + 'other word'
     )
-
-    token = await login(user=user, password=password + 'other word')
-
     assert token is None

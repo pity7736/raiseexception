@@ -1,7 +1,7 @@
 from pytest import mark
 
 from raiseexception.accounts.models import User
-
+from tests.factories import UserFactory
 
 password_params = (
     ('test password', 'O2dmIBHo97eOO72wy0appi/JPQhxmew+hGJHlYv0ic4='),
@@ -22,11 +22,7 @@ async def test_create_user(password, hashed_password, db_connection, mocker):
     random_mock = mocker.patch('raiseexception.utils.crypto.get_random_string')
     salt = 'HjIQUM3X9KUAnlmGxDKGjdzGy8wPrFsK'
     random_mock.return_value = salt
-    user = await User.create(
-        username='__pity__',
-        email='test@email.com',
-        password=password
-    )
+    user = await UserFactory.create(password=password)
     user_fetched = await User.get(username=user.username)
 
     assert user_fetched.username == user.username

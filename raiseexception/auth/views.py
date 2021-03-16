@@ -3,7 +3,6 @@ from starlette.responses import RedirectResponse
 from starlette.routing import Route
 
 from raiseexception import settings
-from raiseexception.accounts.models import User
 from raiseexception.auth.controllers import login
 
 
@@ -14,8 +13,7 @@ async def login_view(request):
         data = await request.form()
         username = data.get('username')
         password = data.get('password')
-        user = await User.get(username=username)
-        token = await login(user=user, password=password)
+        token = await login(username=username, password=password)
         response = RedirectResponse(url='/')
         if token:
             response.set_cookie(

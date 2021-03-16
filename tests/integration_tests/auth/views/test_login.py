@@ -39,3 +39,15 @@ def test_wrong_password(db_connection, event_loop, test_client):
 
     assert response.status_code == 401
     assert session_cookie is None
+
+
+def test_user_does_not_exists(db_connection, event_loop, test_client):
+    event_loop.run_until_complete(UserFactory.create())
+    response = test_client.post(
+        '/auth/login',
+        data={'username': 'wrong username', 'password': UserFactory.password}
+    )
+    session_cookie = response.cookies.get('__Host-raiseexception-session')
+
+    assert response.status_code == 401
+    assert session_cookie is None

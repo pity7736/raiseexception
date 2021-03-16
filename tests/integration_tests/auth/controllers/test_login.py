@@ -10,7 +10,7 @@ from tests.factories import UserFactory
 async def test_success(db_connection):
     user = await UserFactory.create()
 
-    token = await login(user=user, password=UserFactory.password)
+    token = await login(username=user.username, password=UserFactory.password)
 
     assert isinstance(token, Token)
     assert token.value
@@ -22,7 +22,17 @@ async def test_success(db_connection):
 async def test_fail(db_connection):
     user = await UserFactory.create()
     token = await login(
-        user=user,
+        username=user.username,
+        password=UserFactory.password + 'other word'
+    )
+    assert token is None
+
+
+@mark.asyncio
+async def test_user_does_not_exists(db_connection):
+    await UserFactory.create()
+    token = await login(
+        username='wrong username',
         password=UserFactory.password + 'other word'
     )
     assert token is None

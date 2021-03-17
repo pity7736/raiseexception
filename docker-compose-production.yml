@@ -3,29 +3,10 @@ services:
   raise_exception:
     image: raise_exception_web
     build:
-      context: .
       target: web
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
     environment:
       - APP_ENVIRONMENT=production
-    command: python main.py
-    volumes:
-      - .:/code/
-    depends_on:
-      - db
 
   db:
-    image: postgres:12
-    volumes:
-      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
-      - "dbdata:/var/lib/postgresql/data"
     ports:
-      - 5431:5432
-    env_file:
-      - .env
-
-volumes:
-  dbdata:
+      - "0:5432"

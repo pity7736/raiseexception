@@ -1,3 +1,6 @@
+import asyncio
+
+from kinton.utils import get_connection
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 
@@ -32,4 +35,27 @@ if settings.APP_ENVIRONMENT == 'dev':
         )
     ))
 
-app = Starlette(debug=settings.DEBUG, routes=routes)
+
+async def _initialize_db(attempt=1):
+    sql_file = f'{settings.BASE_DIR}/../tests/integration_tests/db.sql'
+    with open(sql_file) as f:
+        sql = f.read()
+
+    try:
+        connection = await get_connection()
+    except (ConnectionResetError, ConnectionRefusedError):
+        print('connection error')
+        if attempt < 4:
+            print(f'sleeping {attempt} seconds')
+            await asyncio.sleep(attempt)
+            print('retrying...')
+            return await _initialize_db(attempt + 1)
+    else:
+        await connection.execute(sql)
+
+
+app = Starlette(
+    debug=settings.DEBUG,
+    routes=routes,
+    on_startup=[_initialize_db]
+)

@@ -20,7 +20,7 @@ routes = [
     Mount('/auth', routes=auth_views.routes)
 ]
 
-if settings.APP_ENVIRONMENT == 'dev':
+if settings.DEBUG:
     from starlette.staticfiles import StaticFiles
     routes.extend((
         Mount(

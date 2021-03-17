@@ -4,8 +4,8 @@ from starlette.templating import Jinja2Templates
 
 # application
 APP_ENVIRONMENT = os.environ['APP_ENVIRONMENT']
-DEBUG = APP_ENVIRONMENT == 'dev'
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEBUG = True
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # database
 DB_HOST = os.environ['KINTON_HOST']

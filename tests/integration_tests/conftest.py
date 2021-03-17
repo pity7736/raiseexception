@@ -21,7 +21,7 @@ def schema():
 
 @fixture(scope='session')
 async def db_pool(session_mocker):
-    print()
+    print(f'connecting to {settings.DB_NAME} database'.upper())
     pool: Pool = await asyncpg.create_pool(
         host=settings.DB_HOST,
         user=settings.DB_USER,

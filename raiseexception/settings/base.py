@@ -16,6 +16,7 @@ DB_PORT = os.environ['KINTON_PORT']
 
 # crypto
 SESSION_TOKEN_LENGTH = 64
+SESSION_COOKIE_NAME = '__Host-raiseexception-session'
 
 # html
 TEMPLATE_DIRS = f'{BASE_DIR}/templates'

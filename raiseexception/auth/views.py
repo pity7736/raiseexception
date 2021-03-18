@@ -4,8 +4,21 @@ from starlette.routing import Route
 
 from raiseexception import settings
 from raiseexception.auth.controllers import login
+from raiseexception.auth.models import Token
 
 
+def redirect_if_is_authenticated(function):
+    async def wrapper(request):
+        session_token = request.cookies.get(settings.SESSION_COOKIE_NAME)
+        if session_token:
+            token = await Token.get_or_none(value=session_token)
+            if token:
+                return RedirectResponse(url='/', status_code=302)
+        return await function(request)
+    return wrapper
+
+
+@redirect_if_is_authenticated
 async def login_view(request):
     status_code = 200
     if request.method == 'POST':
@@ -13,18 +26,19 @@ async def login_view(request):
         data = await request.form()
         username = data.get('username')
         password = data.get('password')
-        token = await login(username=username, password=password)
-        response = RedirectResponse(url='/', status_code=302)
-        if token:
-            response.set_cookie(
-                key='__Host-raiseexception-session',
-                value=token.value,
-                domain='testserver.local',
-                secure=True,
-                httponly=True,
-                samesite='strict'
-            )
-            return response
+        if username and password:
+            token = await login(username=username, password=password)
+            if token:
+                response = RedirectResponse(url='/', status_code=302)
+                response.set_cookie(
+                    key=settings.SESSION_COOKIE_NAME,
+                    value=token.value,
+                    domain='testserver.local',
+                    secure=True,
+                    httponly=True,
+                    samesite='strict'
+                )
+                return response
     return settings.TEMPLATE.TemplateResponse(
         '/auth/login.html',
         {'request': request},

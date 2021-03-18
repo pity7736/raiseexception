@@ -25,7 +25,7 @@ def test_post_success(db_connection, event_loop, test_client):
     )
     session_cookie = response.cookies['__Host-raiseexception-session']
 
-    assert response.status_code == 307
+    assert response.status_code == 302
     assert session_cookie
 
 

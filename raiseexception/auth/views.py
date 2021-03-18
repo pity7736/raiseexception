@@ -14,7 +14,7 @@ async def login_view(request):
         username = data.get('username')
         password = data.get('password')
         token = await login(username=username, password=password)
-        response = RedirectResponse(url='/')
+        response = RedirectResponse(url='/', status_code=302)
         if token:
             response.set_cookie(
                 key='__Host-raiseexception-session',

@@ -2,10 +2,13 @@ import asyncio
 
 from kinton.utils import get_connection
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.routing import Route, Mount
 
 from raiseexception import settings
 from raiseexception.admin.views import admin_views
+from raiseexception.auth.controllers import CookieAuthBackend
 from raiseexception.auth.views import auth_views
 
 
@@ -18,8 +21,8 @@ def index(request):
 
 routes = [
     Route('/', index),
-    Mount('/auth', routes=auth_views.routes),
-    Mount('/admin', routes=admin_views.routes)
+    Mount('/auth', routes=auth_views.routes, name='auth'),
+    Mount('/admin', routes=admin_views.routes, name='admin')
 ]
 
 if settings.DEBUG:
@@ -59,5 +62,8 @@ async def _initialize_db(attempt=1):
 app = Starlette(
     debug=settings.DEBUG,
     routes=routes,
-    on_startup=[_initialize_db]
+    on_startup=[_initialize_db],
+    middleware=(
+        Middleware(AuthenticationMiddleware, backend=CookieAuthBackend()),
+    )
 )

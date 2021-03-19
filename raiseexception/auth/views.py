@@ -4,18 +4,7 @@ from starlette.routing import Route
 
 from raiseexception import settings
 from raiseexception.auth.controllers import login
-from raiseexception.auth.models import Token
-
-
-def redirect_if_is_authenticated(function):
-    async def wrapper(request):
-        session_token = request.cookies.get(settings.SESSION_COOKIE_NAME)
-        if session_token:
-            token = await Token.get_or_none(value=session_token)
-            if token:
-                return RedirectResponse(url='/', status_code=302)
-        return await function(request)
-    return wrapper
+from raiseexception.auth.decorators import redirect_if_is_authenticated
 
 
 @redirect_if_is_authenticated
@@ -47,7 +36,7 @@ async def login_view(request):
 
 
 routes = (
-    Route('/login', login_view, methods=['GET', 'POST']),
+    Route('/login', login_view, methods=['GET', 'POST'], name='login'),
 )
 
 auth_views = Starlette(routes=routes)

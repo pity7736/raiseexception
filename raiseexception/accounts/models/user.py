@@ -20,3 +20,7 @@ class User(Model):
 
     def get_password_salt(self):
         return self._password.split('$')[0]
+
+    @property
+    def is_authenticated(self) -> bool:
+        return True

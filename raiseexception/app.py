@@ -5,6 +5,7 @@ from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 
 from raiseexception import settings
+from raiseexception.admin.views import admin_views
 from raiseexception.auth.views import auth_views
 
 
@@ -17,7 +18,8 @@ def index(request):
 
 routes = [
     Route('/', index),
-    Mount('/auth', routes=auth_views.routes)
+    Mount('/auth', routes=auth_views.routes),
+    Mount('/admin', routes=admin_views.routes)
 ]
 
 if settings.DEBUG:

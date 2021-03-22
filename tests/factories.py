@@ -1,6 +1,7 @@
 import factory
 
 from raiseexception.accounts.models import User
+from raiseexception.blog.models import Category
 
 
 class AwaitableFactoryMixin:
@@ -11,6 +12,10 @@ class AwaitableFactoryMixin:
             return await model_class.create(*args, **kwargs)
         return create()
 
+    @classmethod
+    async def create_batch(cls, size, **kwargs):
+        return [await cls.create(**kwargs) for _ in range(size)]
+
 
 class UserFactory(AwaitableFactoryMixin, factory.Factory):
     username = '__pity__'
@@ -19,3 +24,10 @@ class UserFactory(AwaitableFactoryMixin, factory.Factory):
 
     class Meta:
         model = User
+
+
+class CategoryFactory(AwaitableFactoryMixin, factory.Factory):
+    name = factory.Faker('name')
+
+    class Meta:
+        model = Category

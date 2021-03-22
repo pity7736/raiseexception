@@ -8,6 +8,7 @@ from pytest import fixture
 from starlette.testclient import TestClient
 
 from raiseexception import settings, app
+from tests.factories import UserFactory
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -69,3 +70,13 @@ async def db_connection(db_pool, schema, mocker):
 @fixture
 def test_client():
     return TestClient(app=app)
+
+
+@fixture
+def cookies_fixture(event_loop, test_client):
+    user = event_loop.run_until_complete(UserFactory.create())
+    login_response = test_client.post(
+        '/auth/login',
+        data={'username': user.username, 'password': UserFactory.password}
+    )
+    return login_response.cookies.get_dict()

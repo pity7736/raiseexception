@@ -27,3 +27,36 @@ def test_get(db_connection, event_loop, test_client, cookies_fixture):
     assert '<textarea id="body" name="body" required></textarea>' \
         in response.text
     assert '<input type="submit" value="Create">' in response.text
+    assert '<p>post created successfully</p>' not in response.text
+    assert '<p></p>' not in response.text
+
+
+def test_success(db_connection, event_loop, test_client, cookies_fixture):
+    category = event_loop.run_until_complete(CategoryFactory.create())
+    response = test_client.post(
+        '/admin/blog',
+        cookies=cookies_fixture,
+        data={
+            'title': 'test title',
+            'body': 'test body',
+            'category_id': category.id
+        }
+    )
+
+    assert response.status_code == 201
+    assert '<p>post created successfully</p>' in response.text
+
+
+def test_missing_data(db_connection, event_loop, test_client, cookies_fixture):
+    category = event_loop.run_until_complete(CategoryFactory.create())
+    response = test_client.post(
+        '/admin/blog',
+        cookies=cookies_fixture,
+        data={
+            'body': 'test body',
+            'category_id': category.id
+        }
+    )
+
+    assert response.status_code == 400
+    assert '<p>title is obligatory</p>' in response.text

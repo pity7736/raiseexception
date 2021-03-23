@@ -5,6 +5,7 @@ from starlette.routing import Route
 
 from raiseexception import settings
 from raiseexception.auth.decorators import login_required
+from raiseexception.blog.controllers import CreatePost
 from raiseexception.blog.models import Category
 
 
@@ -18,16 +19,35 @@ def index(request: Request):
 
 @login_required
 async def blog(request):
+    status_code = 200
+    message = ''
+    if request.method == 'POST':
+        data = await request.form()
+        create_post = CreatePost(**data)
+        try:
+            await create_post.create()
+        except ValueError as e:
+            status_code = 400
+            message = str(e)
+        else:
+            status_code = 201
+            message = 'post created successfully'
+
     categories = await Category.all()
     return settings.TEMPLATE.TemplateResponse(
-        '/admin/blog.html',
-        {'request': request, 'categories': categories}
+        name='/admin/blog.html',
+        status_code=status_code,
+        context={
+            'request': request,
+            'categories': categories,
+            'message': message
+        }
     )
 
 
 routes = (
     Route('/', index),
-    Route('/blog', blog)
+    Route('/blog', blog, methods=['GET', 'POST'])
 )
 
 admin_views = Starlette(routes=routes)

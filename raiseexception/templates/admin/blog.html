@@ -8,6 +8,11 @@
         <script async defer data-domain="raiseexception.dev" src="https://plausible.io/js/plausible.js"></script>
     </head>
     <body>
+        {% if message %}
+            <div>
+                <p>{{ message }}</p>
+            </div>
+        {% endif %}
         <form id="create-post" action="/admin/blog" method="post">
             <label for="title">Title:</label>
             <input id="title" name="title" type="text" required autofocus>

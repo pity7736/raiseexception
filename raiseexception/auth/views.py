@@ -1,4 +1,5 @@
 from starlette.applications import Starlette
+from starlette.requests import Request
 from starlette.responses import RedirectResponse
 from starlette.routing import Route
 
@@ -8,7 +9,7 @@ from raiseexception.auth.decorators import redirect_if_is_authenticated
 
 
 @redirect_if_is_authenticated
-async def login_view(request):
+async def login_view(request: Request):
     status_code = 200
     if request.method == 'POST':
         status_code = 401
@@ -18,7 +19,11 @@ async def login_view(request):
         if username and password:
             token = await login(username=username, password=password)
             if token:
-                response = RedirectResponse(url='/', status_code=302)
+                url = request.query_params.get('next', '/')
+                response = RedirectResponse(
+                    url=url,
+                    status_code=302
+                )
                 response.set_cookie(
                     key=settings.SESSION_COOKIE_NAME,
                     value=token.value,

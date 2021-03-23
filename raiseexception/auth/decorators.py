@@ -11,7 +11,10 @@ def login_required(function):
                 return await function(request)
             else:
                 return function(request)
-        return RedirectResponse(url='/auth/login?next=/admin', status_code=302)
+        return RedirectResponse(
+            url=f'/auth/login?next={request.url.path}',
+            status_code=302
+        )
     return wrapper
 
 

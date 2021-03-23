@@ -17,12 +17,12 @@
             <label for="title">Title:</label>
             <input id="title" name="title" type="text" required autofocus>
             <label for="category_id">Category:</label>
-            <select id="category_id" name="category_id" required>
-                <option value="" selected>-----</option>
+            <input id="category_id" name="category_id" list="category_values" required>
+            <datalist id="category_values">
                 {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.name }}</option>
                 {% endfor %}
-            </select>
+            </datalist>
             <label for="body">Body:</label>
             <textarea id="body" name="body" required></textarea>
             <input type="submit" value="Create">

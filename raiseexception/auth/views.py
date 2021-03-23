@@ -22,7 +22,7 @@ async def login_view(request):
                 response.set_cookie(
                     key=settings.SESSION_COOKIE_NAME,
                     value=token.value,
-                    domain='testserver.local',
+                    domain=settings.APP_DOMAIN,
                     secure=True,
                     httponly=True,
                     samesite='strict'

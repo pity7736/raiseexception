@@ -104,3 +104,21 @@ def test_user_does_not_exists(db_connection, event_loop, test_client):
 
     assert response.status_code == 401
     assert session_cookie is None
+
+
+def test_domain(db_connection, event_loop, test_client):
+    current_domain = settings.APP_DOMAIN
+    settings.APP_DOMAIN = 'raiseexception.dev'
+    test_client.base_url = f'http://{settings.APP_DOMAIN}'
+    user = event_loop.run_until_complete(UserFactory.create())
+    response = test_client.post(
+        '/auth/login',
+        data={'username': user.username, 'password': UserFactory.password},
+    )
+    session_cookie = response.cookies.get(
+        name=settings.SESSION_COOKIE_NAME,
+        domain=f'.{settings.APP_DOMAIN}',
+    )
+
+    assert session_cookie
+    settings.APP_DOMAIN = current_domain

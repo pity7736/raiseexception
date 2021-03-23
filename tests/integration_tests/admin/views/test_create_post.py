@@ -16,6 +16,7 @@ def test_get(db_connection, event_loop, test_client, cookies_fixture):
     assert '<label for="category_id">Category:</label>' in response.text
     assert '<select id="category_id" name="category_id" required>' \
         in response.text
+    assert '<option value="" selected>-----</option>' in response.text
     assert f'<option value="{category1.id}">{category1.name}</option>' \
         in response.text
     assert f'<option value="{category2.id}">{category2.name}</option>' \

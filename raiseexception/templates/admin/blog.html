@@ -18,6 +18,7 @@
             <input id="title" name="title" type="text" required autofocus>
             <label for="category_id">Category:</label>
             <select id="category_id" name="category_id" required>
+                <option value="" selected>-----</option>
                 {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.name }}</option>
                 {% endfor %}

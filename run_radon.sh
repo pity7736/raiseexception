@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-radon cc -a -s -nb raiseexception
+radon cc -a -s raiseexception

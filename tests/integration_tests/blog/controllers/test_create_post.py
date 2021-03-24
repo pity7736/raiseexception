@@ -2,16 +2,15 @@ from pytest import mark, raises
 
 from raiseexception.blog.controllers import CreatePost
 from raiseexception.blog.models import Post
-from tests.factories import CategoryFactory
 
 
 @mark.asyncio
-async def test_success(db_connection):
-    category = await CategoryFactory.create()
+async def test_success(db_connection, user_fixture, category_fixture):
     data = {
         'title': 'test post',
         'body': 'test body',
-        'category_id': category.id
+        'category_id': category_fixture.id,
+        'author': user_fixture
     }
     create_post = CreatePost(**data)
     post = await create_post.create()
@@ -19,24 +18,26 @@ async def test_success(db_connection):
     assert isinstance(post, Post) is True
     assert post.title == 'test post'
     assert post.body == 'test body'
-    assert post.category_id == category.id
+    assert post.category_id == category_fixture.id
 
 
 missing_data_params = (
     ('title', 'title is obligatory'),
     ('body', 'body is obligatory'),
     ('category_id', 'category_id is obligatory'),
+    ('author', 'author is obligatory')
 )
 
 
 @mark.parametrize('field, expected_message', missing_data_params)
 @mark.asyncio
-async def test_missing_data(field, expected_message, db_connection):
-    category = await CategoryFactory.create()
+async def test_missing_data(field, expected_message, db_connection,
+                            user_fixture, category_fixture):
     data = {
         'title': 'test post',
         'body': 'test body',
-        'category_id': category.id
+        'category_id': category_fixture.id,
+        'author': user_fixture
     }
     data.pop(field)
     create_post = CreatePost(**data)
@@ -47,11 +48,12 @@ async def test_missing_data(field, expected_message, db_connection):
 
 
 @mark.asyncio
-async def test_category_does_not_exists(db_connection):
+async def test_category_does_not_exists(db_connection, user_fixture):
     data = {
         'title': 'test post',
         'body': 'test body',
-        'category_id': 10000000
+        'category_id': 10000000,
+        'author': user_fixture
     }
     create_post = CreatePost(**data)
     with raises(ValueError) as e:

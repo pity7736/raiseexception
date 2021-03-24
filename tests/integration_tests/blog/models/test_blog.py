@@ -1,11 +1,10 @@
 from pytest import mark
 
-from raiseexception.blog.models import Category, Post
+from raiseexception.blog.models import Post
 
 
 @mark.asyncio
-async def test_success(db_connection):
-    category = await Category.create(name='test name')
+async def test_success(db_connection, user_fixture, category_fixture):
     body = '''
         # post title
 
@@ -21,7 +20,8 @@ async def test_success(db_connection):
     await Post.create(
         title='test title',
         body=body,
-        category=category
+        category=category_fixture,
+        author=user_fixture
     )
     post = await Post.get(title='test title')
     await post.category.fetch()
@@ -29,4 +29,4 @@ async def test_success(db_connection):
     assert post.id
     assert post.title == 'test title'
     assert post.body == body
-    assert post.category.name == 'test name'
+    assert post.category.name == category_fixture.name

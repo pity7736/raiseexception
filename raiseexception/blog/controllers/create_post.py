@@ -2,6 +2,7 @@ from asyncpg import exceptions
 from nyoibo import fields
 from nyoibo.entities.entity import Entity
 
+from raiseexception.accounts.models import User
 from raiseexception.blog.models import Post, Category
 
 
@@ -9,6 +10,7 @@ class CreatePost(Entity):
     _title = fields.StrField()
     _body = fields.StrField()
     _category_id = fields.StrField()
+    _author = fields.LinkField(to=User)
 
     async def create(self) -> Post:
         self._validate_data()
@@ -17,7 +19,8 @@ class CreatePost(Entity):
             return await Post.create(
                 title=self._title,
                 body=self._body,
-                category_id=self._category_id
+                category_id=self._category_id,
+                author=self._author
             )
         except exceptions.ForeignKeyViolationError:
             raise ValueError('does not exists category with id: '
@@ -31,6 +34,8 @@ class CreatePost(Entity):
             raise ValueError('body is obligatory')
         if not self._category_id:
             raise ValueError('category_id is obligatory')
+        if not self._author:
+            raise ValueError('author is obligatory')
 
     async def _resolve_category_id(self):
         if self._category_id.isdigit() is False:

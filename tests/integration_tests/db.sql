@@ -20,5 +20,6 @@ CREATE TABLE IF NOT EXISTS posts(
   id SERIAL PRIMARY KEY,
   title VARCHAR(100) NOT NULL,
   body TEXT NOT NULL,
-  category_id INTEGER REFERENCES categories NOT NULL
+  category_id INTEGER REFERENCES categories NOT NULL,
+  author_id INTEGER REFERENCES users NOT NULL
 );

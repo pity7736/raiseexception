@@ -8,7 +8,7 @@ from pytest import fixture
 from starlette.testclient import TestClient
 
 from raiseexception import settings, app
-from tests.factories import UserFactory
+from tests.factories import UserFactory, CategoryFactory
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -73,10 +73,22 @@ def test_client():
 
 
 @fixture
-def cookies_fixture(event_loop, test_client):
-    user = event_loop.run_until_complete(UserFactory.create())
+async def user_fixture():
+    return await UserFactory.create()
+
+
+@fixture
+async def category_fixture():
+    return await CategoryFactory.create()
+
+
+@fixture
+def cookies_fixture(event_loop, test_client, user_fixture):
     login_response = test_client.post(
         '/auth/login',
-        data={'username': user.username, 'password': UserFactory.password}
+        data={
+            'username': user_fixture.username,
+            'password': UserFactory.password
+        }
     )
     return login_response.cookies.get_dict()

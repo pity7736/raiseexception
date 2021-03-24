@@ -23,7 +23,12 @@ async def blog(request):
     message = ''
     if request.method == 'POST':
         data = await request.form()
-        create_post = CreatePost(**data)
+        create_post = CreatePost(
+            title=data.get('title'),
+            body=data.get('body'),
+            category_id=data.get('category_id'),
+            author=request.user
+        )
         try:
             await create_post.create()
         except ValueError as e:

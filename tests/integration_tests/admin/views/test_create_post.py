@@ -77,3 +77,20 @@ def test_with_new_category(db_connection, event_loop, test_client,
 
     assert response.status_code == 201
     assert '<p>post created successfully</p>' in response.text
+
+
+def test_send_author_field(db_connection, event_loop, test_client,
+                           cookies_fixture):
+    response = test_client.post(
+        '/admin/blog',
+        cookies=cookies_fixture,
+        data={
+            'title': 'test title',
+            'body': 'test body',
+            'category_id': 'new category',
+            'author': '__pity__'
+        }
+    )
+
+    assert response.status_code == 201
+    assert '<p>post created successfully</p>' in response.text

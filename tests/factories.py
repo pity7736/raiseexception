@@ -1,20 +1,21 @@
 import inspect
 
 import factory
+from kinton import Model
 
 from raiseexception.accounts.models import User
 from raiseexception.blog.models import Category, Post
 
 
-class AwaitableFactoryMixin:
+class AsyncFactory(factory.Factory):
 
     @classmethod
-    def _create(cls, model_class, *args, **kwargs):
+    def _create(cls, model_class: Model, **kwargs):
         async def create():
             for key, value in kwargs.copy().items():
                 if inspect.isawaitable(value):
                     kwargs[key] = await value
-            return await model_class.create(*args, **kwargs)
+            return await model_class.create(**kwargs)
         return create()
 
     @classmethod
@@ -22,7 +23,7 @@ class AwaitableFactoryMixin:
         return [await cls.create(**kwargs) for _ in range(size)]
 
 
-class UserFactory(AwaitableFactoryMixin, factory.Factory):
+class UserFactory(AsyncFactory):
     username = '__pity__'
     email = 'test@email.com'
     password = 'test password'
@@ -31,14 +32,14 @@ class UserFactory(AwaitableFactoryMixin, factory.Factory):
         model = User
 
 
-class CategoryFactory(AwaitableFactoryMixin, factory.Factory):
+class CategoryFactory(AsyncFactory):
     name = factory.Faker('name')
 
     class Meta:
         model = Category
 
 
-class PostFactory(AwaitableFactoryMixin, factory.Factory):
+class PostFactory(AsyncFactory):
     title = factory.Faker('sentence')
     body = factory.Faker('paragraph')
     category = factory.SubFactory(CategoryFactory)

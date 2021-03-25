@@ -10,6 +10,7 @@ from raiseexception import settings
 from raiseexception.admin.views import admin_views
 from raiseexception.auth.controllers import CookieAuthBackend
 from raiseexception.auth.views import auth_views
+from raiseexception.blog.views import blog_views
 
 
 def index(request):
@@ -22,7 +23,8 @@ def index(request):
 routes = [
     Route('/', index),
     Mount('/auth', routes=auth_views.routes, name='auth'),
-    Mount('/admin', routes=admin_views.routes, name='admin')
+    Mount('/admin', routes=admin_views.routes, name='admin'),
+    Mount('/blog', routes=blog_views.routes, name='blog')
 ]
 
 if settings.DEBUG:

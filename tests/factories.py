@@ -1,7 +1,9 @@
+import inspect
+
 import factory
 
 from raiseexception.accounts.models import User
-from raiseexception.blog.models import Category
+from raiseexception.blog.models import Category, Post
 
 
 class AwaitableFactoryMixin:
@@ -9,6 +11,9 @@ class AwaitableFactoryMixin:
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         async def create():
+            for key, value in kwargs.copy().items():
+                if inspect.isawaitable(value):
+                    kwargs[key] = await value
             return await model_class.create(*args, **kwargs)
         return create()
 
@@ -31,3 +36,13 @@ class CategoryFactory(AwaitableFactoryMixin, factory.Factory):
 
     class Meta:
         model = Category
+
+
+class PostFactory(AwaitableFactoryMixin, factory.Factory):
+    title = factory.Faker('sentence')
+    body = factory.Faker('paragraph')
+    category = factory.SubFactory(CategoryFactory)
+    author = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = Post

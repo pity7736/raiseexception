@@ -1,9 +1,9 @@
 version: '3.7'
 services:
   raise_exception:
-    image: raise_exception_web
+    image: raiseexception_web
     build:
-      target: web
+      target: raiseexception_web
     environment:
       - APP_ENVIRONMENT=production
 

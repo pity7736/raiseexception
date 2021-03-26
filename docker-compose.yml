@@ -1,10 +1,10 @@
 version: '3.7'
 services:
   raise_exception:
-    image: raise_exception_dev
+    image: raiseexception_testing
     build:
       context: .
-      target: testing
+      target: raiseexception_testing
     ports:
       - "8000:8000"
     env_file:

@@ -28,5 +28,6 @@ async def test_success(db_connection, user_fixture, category_fixture):
 
     assert post.id
     assert post.title == 'test title'
+    assert post.title_slug == 'test-title'
     assert post.body == body
     assert post.category.name == category_fixture.name

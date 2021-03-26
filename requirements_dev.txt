@@ -11,3 +11,4 @@ requests==2.25.1
 sphinx==3.4.3
 sphinx-rtd-theme==0.5.1
 xenon==0.7.1
+-e git+https://github.com/pity7736/nyoibo.git@master#egg=nyoibo

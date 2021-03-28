@@ -14,6 +14,8 @@ class Post(Model):
     _body = fields.CharField()
     _category = fields.ForeignKeyField(to=Category)
     _author = fields.ForeignKeyField(to=User)
+    _created_at = fields.DatetimeField(auto_now_add=True)
+    _modified_at = fields.DatetimeField(auto_now=True)
 
     class Meta:
         db_table = 'posts'

@@ -31,3 +31,6 @@ async def test_success(db_connection, user_fixture, category_fixture):
     assert post.title_slug == 'test-title'
     assert post.body == body
     assert post.category.name == category_fixture.name
+    assert post.created_at
+    assert post.modified_at
+    assert post.created_at == post.modified_at

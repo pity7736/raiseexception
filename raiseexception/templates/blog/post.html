@@ -10,6 +10,7 @@
     <body>
         <article>
             <h1>{{ post.title }}</h1>
+            <time datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
             <div>
                 {{ post.body }}
             </div>

@@ -20,6 +20,8 @@ def test_post_detail(db_connection, test_client, event_loop):
     assert response.status_code == 200
     assert f'<h1>{post.title}</h1>' in response.text
     assert f'{post.body}' in response.text
+    assert f'<time datetime="{post.created_at.isoformat()}">{post.created_at}'\
+           f'</time>' in response.text
 
 
 def test_post_detail_with_non_existing_post(db_connection, test_client):

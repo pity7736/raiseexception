@@ -6,13 +6,14 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Create post</title>
         <script async defer data-domain="raiseexception.dev" src="https://plausible.io/js/plausible.js"></script>
+        <link rel="stylesheet" href="/static/css/styles.css">
     </head>
     <body>
         <article>
             <h1>{{ post.title }}</h1>
             <time datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
             <div>
-                {{ post.body }}
+                {{ post_body|safe }}
             </div>
         </article>
     </body>

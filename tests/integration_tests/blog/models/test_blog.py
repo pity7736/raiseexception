@@ -1,5 +1,6 @@
 from pytest import mark
 
+from raiseexception.blog.constants import PostState
 from raiseexception.blog.models import Post
 
 
@@ -34,3 +35,4 @@ async def test_success(db_connection, user_fixture, category_fixture):
     assert post.created_at
     assert post.modified_at
     assert post.created_at == post.modified_at
+    assert post.state == PostState.DRAFT

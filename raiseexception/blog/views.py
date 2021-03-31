@@ -5,11 +5,17 @@ from starlette.requests import Request
 from starlette.routing import Route
 
 from raiseexception import settings
+from raiseexception.blog.constants import PostState
 from raiseexception.blog.models import Post
 
 
 async def index(request: Request):
-    posts = await Post.all()
+    # TODO: kinton - filter by using enum choice instead of enum value
+    # example await Post.filter(state=PostState.PUBLISHED)
+    queryset = Post.filter()
+    if request.user.is_authenticated is False:
+        queryset = queryset.filter(state=PostState.PUBLISHED.value)
+    posts = await queryset
     return settings.TEMPLATE.TemplateResponse(
         name='/blog/posts.html',
         context={'request': request, 'posts': posts}
@@ -17,7 +23,11 @@ async def index(request: Request):
 
 
 async def post_detail(request: Request):
-    post = await Post.get_or_none(title_slug=request.path_params['post_title'])
+    queryset = Post.filter(title_slug=request.path_params['post_title'])
+    if request.user.is_authenticated is False:
+        queryset = queryset.filter(state=PostState.PUBLISHED.value)
+
+    post = await queryset.get_or_none()
     if post is None:
         raise HTTPException(status_code=404)
 

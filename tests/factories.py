@@ -25,7 +25,7 @@ class AsyncFactory(factory.Factory):
 
 class UserFactory(AsyncFactory):
     username = '__pity__'
-    email = 'test@email.com'
+    email = factory.Sequence(lambda n: f'user{n}@email.com')
     password = 'test password'
 
     class Meta:

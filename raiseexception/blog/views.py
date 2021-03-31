@@ -9,12 +9,16 @@ from raiseexception.blog.constants import PostState
 from raiseexception.blog.models import Post
 
 
-async def index(request: Request):
-    # TODO: kinton - filter by using enum choice instead of enum value
-    # example await Post.filter(state=PostState.PUBLISHED)
-    queryset = Post.filter()
-    if request.user.is_authenticated is False:
+def _filter_post_if_user_is_anonymous(user, queryset):
+    if user.is_authenticated is False:
+        # TODO: kinton - filter by using enum choice instead of enum value
+        # example await Post.filter(state=PostState.PUBLISHED)
         queryset = queryset.filter(state=PostState.PUBLISHED.value)
+    return queryset
+
+
+async def index(request: Request):
+    queryset = _filter_post_if_user_is_anonymous(request.user, Post.filter())
     posts = await queryset
     return settings.TEMPLATE.TemplateResponse(
         name='/blog/posts.html',
@@ -24,9 +28,7 @@ async def index(request: Request):
 
 async def post_detail(request: Request):
     queryset = Post.filter(title_slug=request.path_params['post_title'])
-    if request.user.is_authenticated is False:
-        queryset = queryset.filter(state=PostState.PUBLISHED.value)
-
+    queryset = _filter_post_if_user_is_anonymous(request.user, queryset)
     post = await queryset.get_or_none()
     if post is None:
         raise HTTPException(status_code=404)

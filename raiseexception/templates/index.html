@@ -16,7 +16,9 @@
         <meta property="og:description" content="I'm software developer">
         <meta property="og:image" content="https://raiseexception.dev/media/images/me.jpg">
         <title>Julián Cortés' personal website</title>
-        <script async defer data-domain="raiseexception.dev" src="https://plausible.io/js/plausible.js"></script>
+        {% if not request.user.is_authenticated %}
+            <script async defer data-domain="raiseexception.dev" src="https://plausible.io/js/plausible.js"></script>
+        {% endif %}
         <link rel="stylesheet" href="/static/css/styles.css">
     </head>
     <body class="bg-gray-100">

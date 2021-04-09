@@ -7,6 +7,7 @@ from ..constants import PostCommentState
 class PostComment(Model):
     _id = fields.IntegerField()
     _post = fields.ForeignKeyField(to=Post)
+    _name = fields.CharField()
     _email = fields.CharField()
     _state = fields.CharField(
         choices=PostCommentState,

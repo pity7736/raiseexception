@@ -10,6 +10,7 @@ async def test_success(db_connection):
     post = await PostFactory.create()
     comment = await PostComment.create(
         post=post,
+        name='Julián',
         email='anonymous@protonmail.com',
         body='I like this post'
     )
@@ -20,4 +21,5 @@ async def test_success(db_connection):
     assert comment.post.id == post.id
     assert comment.created_at
     assert comment.modified_at
+    assert comment.name == 'Julián'
     assert comment.email == 'anonymous@protonmail.com'

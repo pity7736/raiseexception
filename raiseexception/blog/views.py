@@ -2,11 +2,12 @@ import markdown
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
+from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.routing import Route
 
 from raiseexception import settings
 from raiseexception.blog.constants import PostState
-from raiseexception.blog.models import Post
+from raiseexception.blog.models import Post, PostComment
 
 
 def _filter_post_if_user_is_anonymous(user, queryset):
@@ -48,8 +49,31 @@ async def post_detail(request: Request):
     )
 
 
+async def post_comment(request):
+    data = await request.form()
+    post_id = data.get('post_id')
+    body = data.get('body')
+    if post_id and body:
+        # TODO: cast to int - kinton
+        post = await Post.get_or_none(id=int(post_id))
+        if post is None:
+            raise HTTPException(status_code=404)
+        await PostComment.create(
+            post=post,
+            name=data.get('name'),
+            email=data.get('email'),
+            body=data['body']
+        )
+        return RedirectResponse(
+            url=f'/blog/{post.title_slug}',
+            status_code=302
+        )
+    return PlainTextResponse(status_code=400)
+
+
 routes = (
     Route('/', index),
+    Route('/comment', post_comment, methods=['POST']),
     Route('/{post_title:str}', post_detail)
 )
 

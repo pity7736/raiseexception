@@ -70,7 +70,7 @@ def test_published_post_detail(db_connection, test_client, event_loop):
            f'</time>' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
-    assert '<form id="comment" action="/blog/comment" method="post">' \
+    assert '<form id="comment" method="post">' \
         in response.text
     assert '<label for="name">Name:</label>' in response.text
     assert '<input id="name" name="name" type="text" placeholder=' \
@@ -107,7 +107,7 @@ def test_published_post_detail_with_pending_comment(db_connection, test_client,
            f'</time>' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
-    assert '<form id="comment" action="/blog/comment" method="post">' \
+    assert '<form id="comment" method="post">' \
         in response.text
     assert '<label for="name">Name:</label>' in response.text
     assert '<input id="name" name="name" type="text" placeholder=' \

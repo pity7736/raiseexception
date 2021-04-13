@@ -37,14 +37,9 @@ async def post_detail(request: Request):
     message = ''
     if request.method == 'POST':
         data = await request.form()
-        post_id = data.get('post_id')
         body = data.get('body')
         status_code = 400
-        if post_id and body:
-            # TODO: cast to int - kinton
-            post = await Post.get_or_none(id=int(post_id))
-            if post is None:
-                raise HTTPException(status_code=404)
+        if body:
             await PostComment.create(
                 post=post,
                 name=data.get('name'),

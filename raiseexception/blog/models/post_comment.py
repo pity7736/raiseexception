@@ -26,3 +26,10 @@ class PostComment(Model):
         self._state = state.value
         await super()._insert()
         self._state = state
+
+    async def _update(self, update_fields=()):
+        # TODO: fix this in kinton
+        state = self._state
+        self._state = state.value
+        await super()._update(update_fields)
+        self._state = state

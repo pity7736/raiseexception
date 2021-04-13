@@ -4,7 +4,7 @@ import factory
 from kinton import Model
 
 from raiseexception.accounts.models import User
-from raiseexception.blog.models import Category, Post
+from raiseexception.blog.models import Category, Post, PostComment
 
 
 class AsyncFactory(factory.Factory):
@@ -47,3 +47,13 @@ class PostFactory(AsyncFactory):
 
     class Meta:
         model = Post
+
+
+class PostCommentFactory(AsyncFactory):
+    name = factory.Faker('name')
+    post = factory.SubFactory(PostFactory)
+    email = 'anonymous@pm.me'
+    body = factory.Faker('paragraph')
+
+    class Meta:
+        model = PostComment

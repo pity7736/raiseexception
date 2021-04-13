@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Create post</title>
+    </head>
+    <body>
+        {% if message %}
+            <div>
+                <p>{{ message }}</p>
+            </div>
+        {% endif %}
+        {% if comments %}
+            <h2>Pending comments:</h2>
+            <form method="post">
+                <ul>
+                    {% for comment in comments %}
+                        <li>
+                            <p>{{ comment.name }}</p>
+                            <p>{{ comment.post.title }}</p>
+                            <input name="approve" type="checkbox" value="{{ comment.id }}">
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input type="submit" value="Approve">
+            </form>
+        {% else %}
+            <h2>There are no pending comments.</h2>
+        {% endif %}
+    </body>
+</html>

@@ -35,6 +35,8 @@
                         <div>{{ comment.name }}, {{ comment.created_at}}</div>
                         <p>{{ comment.body }}</p>
                     </li>
+                {% else %}
+                    <p>There are no comments.</p>
                 {% endfor %}
             </ul>
         </section>

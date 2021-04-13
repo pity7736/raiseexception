@@ -8,3 +8,4 @@ class PostState(Enum):
 
 class PostCommentState(Enum):
     PENDING = 'pending'
+    APPROVED = 'approved'

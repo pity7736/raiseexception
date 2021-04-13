@@ -6,7 +6,7 @@ from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.routing import Route
 
 from raiseexception import settings
-from raiseexception.blog.constants import PostState
+from raiseexception.blog.constants import PostState, PostCommentState
 from raiseexception.blog.models import Post, PostComment
 
 
@@ -39,7 +39,10 @@ async def post_detail(request: Request):
         output_format='html5',
         extensions=['codehilite']
     )
-    comments = await PostComment.filter(post_id=post.id)
+    comments = await PostComment.filter(
+        post_id=post.id,
+        state=PostCommentState.APPROVED.value
+    )
     return settings.TEMPLATE.TemplateResponse(
         name='/blog/post.html',
         context={

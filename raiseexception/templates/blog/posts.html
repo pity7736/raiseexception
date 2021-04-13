@@ -10,7 +10,7 @@
     <body>
         <h1>My last posts2</h1>
         {% for post in posts %}
-            <h2>{{ post.title }}</h2>
+            <h2><a href="/blog/{{ post.title_slug }}">{{ post.title }}</a></h2>
         {% endfor %}
     </body>
 </html>

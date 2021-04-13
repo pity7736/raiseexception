@@ -84,6 +84,7 @@ def test_wrong_password(db_connection, event_loop, test_client):
 
     assert response.status_code == 401
     assert session_cookie is None
+    assert 'username or password are wrong' in response.text
 
 
 def test_without_username_and_password(db_connection, event_loop, test_client):

@@ -8,6 +8,10 @@
         {% include 'analytics.html' %}
     </head>
     <body>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+        <p></p>
         <form id="login" action="#" method="post">
             <label for="username">Username:</label>
             <input id="username" name="username" type="text" required autofocus>

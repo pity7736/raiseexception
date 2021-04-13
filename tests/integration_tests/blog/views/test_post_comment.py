@@ -62,7 +62,7 @@ def test_without_name(db_connection, test_client, event_loop):
     comment = event_loop.run_until_complete(PostComment.get(post_id=post.id))
 
     assert response.status_code == 201
-    assert comment.name is None
+    assert comment.name == 'anonymous'
     assert comment.post_id == post.id
     assert comment.email == 'anonymous@protonmail.com'
 
@@ -81,7 +81,7 @@ def test_without_name_or_email(db_connection, test_client, event_loop):
     comment = event_loop.run_until_complete(PostComment.get(post_id=post.id))
 
     assert response.status_code == 201
-    assert comment.name is None
+    assert comment.name == 'anonymous'
     assert comment.post_id == post.id
     assert comment.email is None
 

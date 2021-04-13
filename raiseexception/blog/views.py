@@ -39,12 +39,14 @@ async def post_detail(request: Request):
         output_format='html5',
         extensions=['codehilite']
     )
+    comments = await PostComment.filter(post_id=post.id)
     return settings.TEMPLATE.TemplateResponse(
         name='/blog/post.html',
         context={
             'request': request,
             'post': post,
-            'post_body': post_body
+            'post_body': post_body,
+            'comments': comments
         }
     )
 

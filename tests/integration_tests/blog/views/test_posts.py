@@ -1,6 +1,7 @@
 import markdown
 
 from raiseexception.blog.constants import PostState
+from raiseexception.blog.models import PostComment
 from tests.factories import PostFactory, UserFactory
 
 
@@ -53,6 +54,12 @@ def test_published_post_detail(db_connection, test_client, event_loop):
     post = event_loop.run_until_complete(
         PostFactory.create(state=PostState.PUBLISHED)
     )
+    post_comment = event_loop.run_until_complete(PostComment.create(
+        name='test name',
+        email='raiseexception@pm.me',
+        body='comment body',
+        post=post
+    ))
     response = test_client.get(f'/blog/{post.title_slug}')
 
     assert response.status_code == 200
@@ -62,6 +69,23 @@ def test_published_post_detail(db_connection, test_client, event_loop):
            f'</time>' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
+    assert '<form id="comment" action="/blog/comment" method="post">' \
+        in response.text
+    assert '<label for="name">Name:</label>' in response.text
+    assert '<input id="name" name="name" type="text" placeholder=' \
+        '"name or alias">' in response.text
+    assert '<label for="email">Email:</label>' in response.text
+    assert '<input id="email" name="email" type="email" placeholder=' \
+        '"email will not be published"' in response.text
+    assert f'<input type="hidden" name="post_id" value="{post.id}">' \
+        in response.text
+    assert '<label for="body">Comment:</label>' in response.text
+    assert '<textarea id="body" name="body" required></textarea>' \
+        in response.text
+    assert '<input type="submit" value="Comment">' in response.text
+    assert 'Comments:' in response.text
+    assert f'{post_comment.name}, {post_comment.created_at}' in response.text
+    assert f'<p>{post_comment.body}</p>' in response.text
 
 
 def test_draft_post_detail_with_anonymous_user(db_connection, test_client,

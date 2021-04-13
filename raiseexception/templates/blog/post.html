@@ -16,5 +16,27 @@
                 {{ post_body|safe }}
             </div>
         </article>
+        <section>
+            <form id="comment" action="/blog/comment" method="post">
+                <label for="name">Name:</label>
+                <input id="name" name="name" type="text" placeholder="name or alias">
+                <label for="email">Email:</label>
+                <input id="email" name="email" type="email" placeholder="email will not be published">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <label for="body">Comment:</label>
+                <textarea id="body" name="body" required></textarea>
+                <input type="submit" value="Comment">
+            </form>
+        </section>
+        <section>
+            <ul>Comments:
+                {% for comment in comments %}
+                    <li>
+                        <div>{{ comment.name }}, {{ comment.created_at}}</div>
+                        <p>{{ comment.body }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
     </body>
 </html>

@@ -2,7 +2,6 @@ import markdown
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
-from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.routing import Route
 
 from raiseexception import settings
@@ -34,6 +33,30 @@ async def post_detail(request: Request):
     if post is None:
         raise HTTPException(status_code=404)
 
+    status_code = 200
+    message = ''
+    if request.method == 'POST':
+        data = await request.form()
+        post_id = data.get('post_id')
+        body = data.get('body')
+        status_code = 400
+        if post_id and body:
+            # TODO: cast to int - kinton
+            post = await Post.get_or_none(id=int(post_id))
+            if post is None:
+                raise HTTPException(status_code=404)
+            await PostComment.create(
+                post=post,
+                name=data.get('name'),
+                email=data.get('email'),
+                body=data['body']
+            )
+            status_code = 201
+            message = (
+                "The comment has been created in pending state. It will be "
+                "displayed when it's approved. I'll let you know by email if "
+                "the email was sent."
+            )
     post_body = markdown.markdown(
         text=post.body,
         output_format='html5',
@@ -45,41 +68,20 @@ async def post_detail(request: Request):
     )
     return settings.TEMPLATE.TemplateResponse(
         name='/blog/post.html',
+        status_code=status_code,
         context={
             'request': request,
             'post': post,
             'post_body': post_body,
-            'comments': comments
+            'comments': comments,
+            'message': message
         }
     )
 
 
-async def post_comment(request):
-    data = await request.form()
-    post_id = data.get('post_id')
-    body = data.get('body')
-    if post_id and body:
-        # TODO: cast to int - kinton
-        post = await Post.get_or_none(id=int(post_id))
-        if post is None:
-            raise HTTPException(status_code=404)
-        await PostComment.create(
-            post=post,
-            name=data.get('name'),
-            email=data.get('email'),
-            body=data['body']
-        )
-        return RedirectResponse(
-            url=f'/blog/{post.title_slug}',
-            status_code=302
-        )
-    return PlainTextResponse(status_code=400)
-
-
 routes = (
     Route('/', index),
-    Route('/comment', post_comment, methods=['POST']),
-    Route('/{post_title:str}', post_detail)
+    Route('/{post_title:str}', post_detail, methods=['GET', 'POST'])
 )
 
 blog_views = Starlette(routes=routes)

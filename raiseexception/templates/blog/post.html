@@ -9,6 +9,9 @@
         <link rel="stylesheet" href="/static/css/styles.css">
     </head>
     <body>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
         <article>
             <h1>{{ post.title }}</h1>
             <time datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
@@ -22,23 +25,24 @@
                 <input id="name" name="name" type="text" placeholder="name or alias">
                 <label for="email">Email:</label>
                 <input id="email" name="email" type="email" placeholder="email will not be published">
-                <input type="hidden" name="post_id" value="{{ post.id }}">
                 <label for="body">Comment:</label>
                 <textarea id="body" name="body" required></textarea>
                 <input type="submit" value="Comment">
             </form>
         </section>
         <section>
-            <ul>Comments:
-                {% for comment in comments %}
-                    <li>
-                        <div>{{ comment.name }}, {{ comment.created_at}}</div>
-                        <p>{{ comment.body }}</p>
-                    </li>
-                {% else %}
-                    <p>There are no comments.</p>
-                {% endfor %}
-            </ul>
+            {% if comments %}
+                <ul>Comments:
+                    {% for comment in comments %}
+                        <li>
+                            <div>{{ comment.name }}, {{ comment.created_at}}</div>
+                            <p>{{ comment.body }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                 <p>There are no comments.</p>
+            {% endif %}
         </section>
     </body>
 </html>

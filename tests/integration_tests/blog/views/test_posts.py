@@ -78,8 +78,6 @@ def test_published_post_detail(db_connection, test_client, event_loop):
     assert '<label for="email">Email:</label>' in response.text
     assert '<input id="email" name="email" type="email" placeholder=' \
         '"email will not be published"' in response.text
-    assert f'<input type="hidden" name="post_id" value="{post.id}">' \
-        in response.text
     assert '<label for="body">Comment:</label>' in response.text
     assert '<textarea id="body" name="body" required></textarea>' \
         in response.text
@@ -117,13 +115,11 @@ def test_published_post_detail_with_pending_comment(db_connection, test_client,
     assert '<label for="email">Email:</label>' in response.text
     assert '<input id="email" name="email" type="email" placeholder=' \
         '"email will not be published"' in response.text
-    assert f'<input type="hidden" name="post_id" value="{post.id}">' \
-        in response.text
     assert '<label for="body">Comment:</label>' in response.text
     assert '<textarea id="body" name="body" required></textarea>' \
         in response.text
     assert '<input type="submit" value="Comment">' in response.text
-    assert 'Comments:' in response.text
+    assert 'Comments:' not in response.text
     assert f'{post_comment.name}, {post_comment.created_at}' not in \
         response.text
     assert f'<p>{post_comment.body}</p>' not in response.text

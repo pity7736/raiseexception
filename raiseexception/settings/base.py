@@ -23,3 +23,7 @@ TEMPLATE_DIRS = f'{BASE_DIR}/templates'
 TEMPLATE = Jinja2Templates(directory=TEMPLATE_DIRS)
 STATIC_DIR = f'{TEMPLATE_DIRS}/static'
 MEDIA_DIR = f'{TEMPLATE_DIRS}/media'
+
+# mailing
+MAIL_USERNAME = os.environ['MAIL_USERNAME']
+MAIL_PASSWORD = os.environ['MAIL_PASSWORD']

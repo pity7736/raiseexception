@@ -1,3 +1,5 @@
+import asyncio
+
 import markdown
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
@@ -7,6 +9,8 @@ from starlette.routing import Route
 from raiseexception import settings
 from raiseexception.blog.constants import PostState, PostCommentState
 from raiseexception.blog.models import Post, PostComment
+from raiseexception.mailing.client import MailClient
+from raiseexception.mailing.models import To
 
 
 def _filter_post_if_user_is_anonymous(user, queryset):
@@ -44,7 +48,7 @@ async def post_detail(request: Request):
                 post=post,
                 name=data.get('name'),
                 email=data.get('email'),
-                body=data['body']
+                body=body
             )
             status_code = 201
             message = (
@@ -52,6 +56,13 @@ async def post_detail(request: Request):
                 "displayed when it's approved. I'll let you know by email if "
                 "the email was sent."
             )
+            mail_client = MailClient()
+            asyncio.create_task(mail_client.send(
+                To(email=settings.APP_DOMAIN, name='Julián'),
+                message='You have a new comment to review. Check it <a href="'
+                        'http://localhost:8000/admin/blog/comments">here</a>'
+            ))
+
     post_body = markdown.markdown(
         text=post.body,
         output_format='html5',

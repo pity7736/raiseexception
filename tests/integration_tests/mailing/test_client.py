@@ -8,6 +8,7 @@ from raiseexception.mailing.models import To
 async def test_success():
     client = MailClient()
     result = await client.send(
-        to=To(email='julian.cortes77@pm.me', name='test')
+        to=To(email='pity7736@github.com', name='test'),
+        message='this is the email content'
     )
     assert result is True

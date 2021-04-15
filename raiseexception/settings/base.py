@@ -25,5 +25,7 @@ STATIC_DIR = f'{TEMPLATE_DIRS}/static'
 MEDIA_DIR = f'{TEMPLATE_DIRS}/media'
 
 # mailing
+ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
 MAIL_USERNAME = os.environ['MAIL_USERNAME']
 MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
+MAIL_SANDBOX = False

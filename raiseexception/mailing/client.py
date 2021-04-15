@@ -8,9 +8,9 @@ class MailClient:
     _base_url = 'https://api.mailjet.com/v3.1'
     _username = settings.MAIL_USERNAME
     _password = settings.MAIL_PASSWORD
-    _sand_box = settings.DEBUG
+    _sand_box = settings.MAIL_SANDBOX
 
-    async def send(self, to: To):
+    async def send(self, to: To, message: str):
         async with httpx.AsyncClient(auth=(self._username, self._password)) \
                 as client:
             response = await client.post(
@@ -32,7 +32,7 @@ class MailClient:
                             ],
                             'Subject': 'test email',
                             'TextPart': 'plain text email',
-                            'HTMLPart': 'html text email'
+                            'HTMLPart': message
                         }
                     ]
                 }

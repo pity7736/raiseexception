@@ -58,9 +58,9 @@ async def post_detail(request: Request):
             )
             mail_client = MailClient()
             asyncio.create_task(mail_client.send(
-                To(email=settings.APP_DOMAIN, name='Julián'),
+                To(email=settings.ADMIN_EMAIL, name='Julián'),
                 message='You have a new comment to review. Check it <a href="'
-                        'http://localhost:8000/admin/blog/comments">here</a>'
+                        f'{settings.SITE}/admin/blog/comments">here</a>'
             ))
 
     post_body = markdown.markdown(

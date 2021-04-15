@@ -10,7 +10,7 @@ class MailClient:
     _password = settings.MAIL_PASSWORD
     _sand_box = settings.MAIL_SANDBOX
 
-    async def send(self, to: To, message: str):
+    async def send(self, to: To, subject: str, message: str):
         async with httpx.AsyncClient(auth=(self._username, self._password)) \
                 as client:
             response = await client.post(
@@ -30,8 +30,7 @@ class MailClient:
                                     'Name': to.name
                                 }
                             ],
-                            'Subject': 'test email',
-                            'TextPart': 'plain text email',
+                            'Subject': subject,
                             'HTMLPart': message
                         }
                     ]

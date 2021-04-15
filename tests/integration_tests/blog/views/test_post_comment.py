@@ -1,12 +1,16 @@
+import asyncio
+
 from raiseexception.blog.constants import PostState
 from raiseexception.blog.models import PostComment
+from raiseexception.mailing.client import MailClient
 from tests.factories import PostFactory
 
 
-def test_success(db_connection, test_client, event_loop):
+def test_success(db_connection, test_client, event_loop, mocker):
     post = event_loop.run_until_complete(
         PostFactory.create(state=PostState.PUBLISHED)
     )
+    mail_client_spy = mocker.spy(MailClient, 'send')
     response = test_client.post(
         f'/blog/{post.title_slug}',
         data={
@@ -24,6 +28,9 @@ def test_success(db_connection, test_client, event_loop):
     assert "<p>The comment has been created in pending state. It will be " \
            "displayed when it's approved. I'll let you know by email if the " \
            "email was sent.</p>"
+    event_loop.run_until_complete(asyncio.sleep(1))
+    assert mail_client_spy.spy_return is True
+    mail_client_spy.assert_called_once()
 
 
 def test_without_email(db_connection, test_client, event_loop):

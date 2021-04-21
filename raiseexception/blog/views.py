@@ -46,7 +46,7 @@ async def post_detail(request: Request):
         if body:
             await PostComment.create(
                 post=post,
-                name=data.get('name'),
+                name=data.get('name') or None,
                 email=data.get('email'),
                 body=body
             )

@@ -1,3 +1,5 @@
+import asyncio
+
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse, RedirectResponse
@@ -8,6 +10,8 @@ from raiseexception.auth.decorators import login_required
 from raiseexception.blog.constants import PostCommentState
 from raiseexception.blog.controllers import CreatePost
 from raiseexception.blog.models import Category, PostComment
+from raiseexception.mailing.client import MailClient
+from raiseexception.mailing.models import To
 
 
 @login_required
@@ -65,10 +69,23 @@ async def comments_view(request: Request):
         data = await request.form()
         approved_comment_ids = data.getlist('approve')
         # TODO: kinton - refactor this implementing update method and in lookup
+        mail_client = MailClient()
+        mail_tasks = []
         for comment_id in approved_comment_ids:
             comment = await PostComment.get(id=int(comment_id))
             comment.state = PostCommentState.APPROVED
             await comment.save(update_fields=('state', 'modified'))
+            if comment.email:
+                await comment.post.fetch()
+                post = comment.post
+                mail_tasks.append(mail_client.send(
+                    to=To(email=comment.email, name='Julián'),
+                    subject='Comment approved',
+                    message=f'Hi {comment.name}, you comment was approved. '
+                            f'Check it <a href="{settings.SITE}/blog'
+                            f'/{post.title_slug}">here</a>'
+                ))
+        await asyncio.gather(*mail_tasks)
         return RedirectResponse(url='/admin/blog/comments', status_code=302)
 
     return settings.TEMPLATE.TemplateResponse(

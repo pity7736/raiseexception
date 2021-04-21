@@ -1,5 +1,8 @@
+from unittest.mock import AsyncMock
+
 from raiseexception.blog.constants import PostState, PostCommentState
 from raiseexception.blog.models import PostComment
+from raiseexception.mailing.client import MailClient
 from tests.factories import PostFactory, PostCommentFactory
 
 
@@ -26,12 +29,17 @@ def test_list_comments(db_connection, test_client, event_loop,
 
 
 def test_approve_comments(db_connection, test_client, event_loop,
-                          cookies_fixture):
+                          cookies_fixture, mocker):
     post = event_loop.run_until_complete(
         PostFactory.create(state=PostState.PUBLISHED)
     )
     comments = event_loop.run_until_complete(
         PostCommentFactory.create_batch(5, post=post)
+    )
+    mail_client_spy = mocker.patch.object(
+        MailClient,
+        'send',
+        new_callable=AsyncMock
     )
     response = test_client.post(
         '/admin/blog/comments',
@@ -43,6 +51,7 @@ def test_approve_comments(db_connection, test_client, event_loop,
     assert response.status_code == 302
     for comment in comments:
         assert comment.state == PostCommentState.APPROVED
+    assert mail_client_spy.await_count == 5
 
 
 def test_list_comments_with_no_pending_comments(db_connection, test_client,

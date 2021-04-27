@@ -1,6 +1,6 @@
 from pytest import mark, raises
 
-from raiseexception.mailing.models import Subscription
+from raiseexception.subscription.models import Subscription
 
 
 @mark.asyncio

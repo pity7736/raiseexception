@@ -11,6 +11,7 @@ from raiseexception.admin.views import admin_views
 from raiseexception.auth.controllers import CookieAuthBackend
 from raiseexception.auth.views import auth_views
 from raiseexception.blog.views import blog_views
+from raiseexception.subscription.views import subscription_views
 
 
 def index(request):
@@ -24,7 +25,8 @@ routes = [
     Route('/', index),
     Mount('/auth', routes=auth_views.routes, name='auth'),
     Mount('/admin', routes=admin_views.routes, name='admin'),
-    Mount('/blog', routes=blog_views.routes, name='blog')
+    Mount('/blog', routes=blog_views.routes, name='blog'),
+    Mount('/subscription', routes=subscription_views.routes)
 ]
 
 if settings.DEBUG:

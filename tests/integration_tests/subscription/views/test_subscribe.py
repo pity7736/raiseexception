@@ -59,3 +59,23 @@ def test_subscribe_without_email(db_connection, test_client, event_loop):
     assert response.status_code == 400
     assert subscription is None
     assert 'email is required' in response.text
+
+
+def test_subscribe_with_existing_email(db_connection, test_client, event_loop):
+    email = 'test@email.com'
+    event_loop.run_until_complete(
+        Subscription.create(email=email)
+    )
+    response = test_client.post(
+        '/subscription/',
+        data={
+            'email': email
+        }
+    )
+    subscription = event_loop.run_until_complete(
+        Subscription.get(email=email)
+    )
+
+    assert response.status_code == 400
+    assert subscription.email == email
+    assert 'the email was already subscribed' in response.text

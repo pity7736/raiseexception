@@ -10,6 +10,7 @@ class Subscription(Model):
     _name = fields.CharField(default_value='anonymous')
     _email = fields.CharField()
     _verified = BooleanField(default_value=False)
+    _token = fields.CharField()
     _created_at = fields.DatetimeField(auto_now_add=True)
     _modified_at = fields.DatetimeField(auto_now=True)
 

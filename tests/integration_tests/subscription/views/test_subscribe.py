@@ -23,6 +23,7 @@ def test_subscribe(db_connection, test_client, event_loop, mocker):
     assert response.status_code == 201
     assert subscription.name == 'Julián'
     assert subscription.email == 'test@email.com'
+    assert subscription.token
     assert 'Subscription created. I sent you a email to verify it.' \
         in response.text
     mail_client_spy.assert_called_once()

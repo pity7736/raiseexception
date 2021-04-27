@@ -6,6 +6,7 @@ from raiseexception import settings
 from raiseexception.mailing.client import MailClient
 from raiseexception.mailing.models import To
 from raiseexception.subscription.models import Subscription
+from raiseexception.utils.crypto import get_random_string
 
 
 async def subscribe_view(request: Request):
@@ -18,17 +19,19 @@ async def subscribe_view(request: Request):
         message = 'email is required'
         if email:
             name = data.get('name')
+            token = get_random_string(length=100)
             await Subscription.create(
                 name=name,
-                email=data.get('email')
+                email=data.get('email'),
+                token=token
             )
             mail_client = MailClient()
             await mail_client.send(
                 to=To(name=name, email=email),
                 subject='Subscription',
                 message=f'Hi {name}, thanks for subscribing. Click '
-                        f'<a href="{settings.SITE}/subscription/verify">here'
-                        '</a> to verify your email.'
+                        f'<a href="{settings.SITE}/subscription/verify?token='
+                        f'{token}">here</a> to verify your email.'
             )
             status_code = 201
             message = 'Subscription created. I sent you a email to verify it.'
@@ -39,8 +42,30 @@ async def subscribe_view(request: Request):
     )
 
 
+async def verify_email_view(request: Request):
+    subscription = await Subscription.get_or_none(
+        token=request.query_params.get('token')
+    )
+    status_code = 400
+    message = 'invalid token'
+    if subscription:
+        subscription.verified = True
+        subscription.token = None
+        await subscription.save(
+            update_fields=('verified', 'token', 'modified_at')
+        )
+        status_code = 200
+        message = 'email verified successfully'
+    return settings.TEMPLATE.TemplateResponse(
+        name='/subscription/verify_email.html',
+        status_code=status_code,
+        context={'request': request, 'message': message}
+    )
+
+
 routes = (
     Route('/', subscribe_view, methods=['GET', 'POST']),
+    Route('/verify', verify_email_view)
 )
 
 subscription_views = Starlette(routes=routes)

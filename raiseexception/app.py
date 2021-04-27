@@ -26,7 +26,11 @@ routes = [
     Mount('/auth', routes=auth_views.routes, name='auth'),
     Mount('/admin', routes=admin_views.routes, name='admin'),
     Mount('/blog', routes=blog_views.routes, name='blog'),
-    Mount('/subscription', routes=subscription_views.routes)
+    Mount(
+        '/subscription',
+        routes=subscription_views.routes,
+        name='subscription'
+    )
 ]
 
 if settings.DEBUG:

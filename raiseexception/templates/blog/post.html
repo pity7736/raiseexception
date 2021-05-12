@@ -1,48 +1,37 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Create post</title>
-        {% include 'analytics.html' %}
-        <link rel="stylesheet" href="/static/css/styles.css">
-    </head>
-    <body>
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
-        <article>
-            <h1>{{ post.title }}</h1>
-            <time datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
-            <div>
-                {{ post_body|safe }}
-            </div>
-        </article>
-        <section>
-            <form id="comment" method="post">
-                <label for="name">Name:</label>
-                <input id="name" name="name" type="text" placeholder="name or alias">
-                <label for="email">Email:</label>
-                <input id="email" name="email" type="email" placeholder="email will not be published">
-                <label for="body">Comment:</label>
-                <textarea id="body" name="body" required></textarea>
-                <input type="submit" value="Comment">
-            </form>
-        </section>
-        <section>
-            {% if comments %}
-                <ul>Comments:
-                    {% for comment in comments %}
-                        <li>
-                            <div>{{ comment.name }}, {{ comment.created_at}}</div>
-                            <p>{{ comment.body }}</p>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                 <p>There are no comments.</p>
-            {% endif %}
-        </section>
-    </body>
-</html>
+{% extends 'base.html' %}
+{% block title %}{{ post.title_slug }}{% endblock %}
+{% block body %}
+    {% include 'message.html' %}
+    <article>
+        <h1>{{ post.title }}</h1>
+        <time datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
+        <div>
+            {{ post_body|safe }}
+        </div>
+    </article>
+    <section>
+        <form id="comment" method="post">
+            <label for="name">Name:</label>
+            <input id="name" name="name" type="text" placeholder="name or alias">
+            <label for="email">Email:</label>
+            <input id="email" name="email" type="email" placeholder="email will not be published">
+            <label for="body">Comment:</label>
+            <textarea id="body" name="body" required></textarea>
+            <input type="submit" value="Comment">
+        </form>
+    </section>
+    <section>
+        {% if comments %}
+            <ul>Comments:
+                {% for comment in comments %}
+                    <li>
+                        <div>{{ comment.name }}, {{ comment.created_at}}</div>
+                        <p>{{ comment.body }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+             <p>There are no comments.</p>
+        {% endif %}
+    </section>
+{% endblock %}

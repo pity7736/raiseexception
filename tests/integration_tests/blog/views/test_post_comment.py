@@ -106,3 +106,20 @@ def test_without_body(db_connection, test_client, event_loop):
 
     assert response.status_code == 400
     assert comment is None
+
+
+def test_with_wrong_email(db_connection, test_client, event_loop):
+    post = event_loop.run_until_complete(
+        PostFactory.create(state=PostState.PUBLISHED)
+    )
+    response = test_client.post(
+        f'/blog/{post.title_slug}',
+        data={
+            'body': 'test comment',
+            'post_id': post.id,
+            'email': 'wrong @email'
+        }
+    )
+
+    assert response.status_code == 400
+    assert 'invalid email' in response.text

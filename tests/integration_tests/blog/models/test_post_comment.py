@@ -1,4 +1,4 @@
-from pytest import mark
+from pytest import mark, raises
 
 from raiseexception.blog.constants import PostCommentState
 from raiseexception.blog.models import PostComment
@@ -42,3 +42,48 @@ async def test_success_without_name(db_connection):
     assert comment.modified_at
     assert comment.name == 'anonymous'
     assert comment.email == 'anonymous@protonmail.com'
+
+
+invalid_email_params = (
+    'wrong email',
+    'wrong@email',
+
+)
+
+
+@mark.parametrize('email', invalid_email_params)
+@mark.asyncio
+async def test_create_with_wrong_email(email, db_connection):
+    with raises(ValueError):
+        await PostComment.create(email=email)
+
+
+@mark.asyncio
+async def test_get_comment_with_none_email(db_connection):
+    post = await PostFactory.create()
+    await PostComment.create(
+        post=post,
+        body='body',
+    )
+
+    comment = await PostComment.get()
+
+    assert comment.post_id == post.id
+    assert comment.body == 'body'
+    assert comment.email is None
+
+
+@mark.asyncio
+async def test_get_comment_with_empty_email(db_connection):
+    post = await PostFactory.create()
+    await PostComment.create(
+        post=post,
+        body='body',
+        email=''
+    )
+
+    comment = await PostComment.get()
+
+    assert comment.post_id == post.id
+    assert comment.body == 'body'
+    assert comment.email == ''

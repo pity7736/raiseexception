@@ -44,25 +44,31 @@ async def post_detail(request: Request):
         body = data.get('body')
         status_code = 400
         if body:
-            await PostComment.create(
-                post=post,
-                name=data.get('name') or None,
-                email=data.get('email'),
-                body=body
-            )
-            status_code = 201
-            message = (
-                "The comment has been created in pending state. It will be "
-                "displayed when it's approved. I'll let you know by email if "
-                "the email was sent."
-            )
-            mail_client = MailClient()
-            asyncio.create_task(mail_client.send(
-                to=To(email=settings.ADMIN_EMAIL, name='Julián'),
-                subject='Comment created',
-                message='You have a new comment to review. Check it <a href="'
+            try:
+                await PostComment.create(
+                    post=post,
+                    name=data.get('name') or None,
+                    email=data.get('email'),
+                    body=body
+                )
+            except ValueError:
+                message = 'invalid email'
+            else:
+                status_code = 201
+                message = (
+                    "The comment has been created in pending state. It will "
+                    "be displayed when it's approved. I'll let you know by "
+                    "email if the email was sent."
+                )
+                mail_client = MailClient()
+                asyncio.create_task(mail_client.send(
+                    to=To(email=settings.ADMIN_EMAIL, name='Julián'),
+                    subject='Comment created',
+                    message=(
+                        'You have a new comment to review. Check it <a href="'
                         f'{settings.SITE}/admin/blog/comments">here</a>'
-            ))
+                    )
+                ))
 
     post_body = markdown.markdown(
         text=post.body,

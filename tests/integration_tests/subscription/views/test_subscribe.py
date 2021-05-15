@@ -79,3 +79,13 @@ def test_subscribe_with_existing_email(db_connection, test_client, event_loop):
     assert response.status_code == 400
     assert subscription.email == email
     assert 'the email was already subscribed' in response.text
+
+
+def test_with_wrong_email(test_client):
+    response = test_client.post(
+        '/subscription/',
+        data={'email': 'wrong email'}
+    )
+
+    assert response.status_code == 400
+    assert 'invalid email' in response.text

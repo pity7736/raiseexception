@@ -23,22 +23,29 @@ async def subscribe_view(request: Request):
             if not subscription:
                 name = data.get('name')
                 token = get_random_string(length=100)
-                await Subscription.create(
-                    name=name,
-                    email=data.get('email'),
-                    token=token
-                )
-                mail_client = MailClient()
-                await mail_client.send(
-                    to=To(name=name, email=email),
-                    subject='Subscription',
-                    message=f'Hi {name}, thanks for subscribing. Click '
-                            f'<a href="{settings.SITE}/subscription/verify?'
-                            f'token={token}">here</a> to verify your email.'
-                )
-                status_code = 201
-                message = 'Subscription created. I sent you a email to ' \
-                          'verify it.'
+                # TODO: nyoibo - refactor this with entity validations
+                try:
+                    await Subscription.create(
+                        name=name,
+                        email=data.get('email'),
+                        token=token
+                    )
+                except ValueError:
+                    status_code = 400
+                    message = 'invalid email'
+                else:
+                    mail_client = MailClient()
+                    await mail_client.send(
+                        to=To(name=name, email=email),
+                        subject='Subscription',
+                        message=f'Hi {name}, thanks for subscribing. Click '
+                                f'<a href="{settings.SITE}/subscription/verify'
+                                f'?token={token}">here</a> to verify your '
+                                f'email.'
+                    )
+                    status_code = 201
+                    message = 'Subscription created. I sent you a email to ' \
+                              'verify it.'
     return settings.TEMPLATE.TemplateResponse(
         name='/subscription/subscribe.html',
         status_code=status_code,

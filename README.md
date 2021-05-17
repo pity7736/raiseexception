@@ -9,8 +9,9 @@ This is the code for my personal website. Under development.
 - Mailing
     - ~~to me when comment is created~~
     - ~~to comment owner when comment is approved (only if email was set)~~
-- publish post
-- template inheritance
+- ~~publish post~~
+- ~~template inheritance (public pages)~~
+- remove token field from Subscription. Maybe use temporary token
 - styles (public pages)
 - privacy policy
 - ~~subscriptions (save email)~~

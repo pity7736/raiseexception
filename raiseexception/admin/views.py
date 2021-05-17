@@ -9,7 +9,7 @@ from raiseexception import settings
 from raiseexception.auth.decorators import login_required
 from raiseexception.blog.constants import PostCommentState
 from raiseexception.blog.controllers import CreatePost
-from raiseexception.blog.models import Category, PostComment
+from raiseexception.blog.models import Category, PostComment, Post
 from raiseexception.mailing.client import MailClient
 from raiseexception.mailing.models import To
 
@@ -94,10 +94,42 @@ async def comments_view(request: Request):
     )
 
 
+@login_required
+async def post_detail_view(request: Request):
+    post = await Post.get(title_slug=request.path_params['post_title'])
+    categories = await Category.all()
+    message = ''
+    status_code = 200
+    if request.method == 'POST':
+        data = await request.form()
+        message = 'post updated successfully'
+        for key, value in data.items():
+            # TODO: validate that the body is a valid markdown
+            if hasattr(post, key):
+                setattr(post, key, value)
+            else:
+                message = f'"{key}" is an invalid field'
+                status_code = 400
+                break
+        else:
+            await post.save()
+    return settings.TEMPLATE.TemplateResponse(
+        name='/admin/post.html',
+        status_code=status_code,
+        context={
+            'request': request,
+            'post': post,
+            'categories': categories,
+            'message': message
+        }
+    )
+
+
 routes = (
     Route('/', index),
     Route('/blog', blog, methods=['GET', 'POST']),
-    Route('/blog/comments', comments_view, methods=['GET', 'POST'])
+    Route('/blog/comments', comments_view, methods=['GET', 'POST']),
+    Route('/blog/{post_title:str}', post_detail_view, methods=['GET', 'POST'])
 )
 
 admin_views = Starlette(routes=routes)

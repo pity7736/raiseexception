@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Raise Exception Admin | Comments</title>
+    </head>
+    <body>
+        {% include 'message.html' %}
+        <form id="update-post" method="post">
+            <label for="title">Title:</label>
+            <input id="title" name="title" type="text" required autofocus value="{{ post.title }}">
+            <label for="category_id">Category:</label>
+            <input id="category_id" name="category_id" list="category_values" required value="{{ post.category_id }}">
+            <datalist id="category_values">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </datalist>
+            <label for="state">State:</label>
+            <input id="state" type="text" name="state" value="{{ post.state.value }}">
+            <label for="body">Body:</label>
+            <textarea id="body" name="body" required>{{ post.body }}</textarea>
+            <input type="submit" value="Update">
+        </form>
+    </body>
+</html>

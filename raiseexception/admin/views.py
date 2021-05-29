@@ -23,7 +23,7 @@ def index(request: Request):
 
 
 @login_required
-async def blog(request):
+async def posts_view(request):
     status_code = 200
     message = ''
     if request.method == 'POST':
@@ -43,13 +43,16 @@ async def blog(request):
             status_code = 201
             message = 'post created successfully'
 
+    # improve testing to be able to run queries concurrently
     categories = await Category.all()
+    posts = await Post.all()
     return settings.TEMPLATE.TemplateResponse(
         name='/admin/blog.html',
         status_code=status_code,
         context={
             'request': request,
             'categories': categories,
+            'posts': posts,
             'message': message
         }
     )
@@ -127,7 +130,7 @@ async def post_detail_view(request: Request):
 
 routes = (
     Route('/', index),
-    Route('/blog', blog, methods=['GET', 'POST']),
+    Route('/blog', posts_view, methods=['GET', 'POST']),
     Route('/blog/comments', comments_view, methods=['GET', 'POST']),
     Route('/blog/{post_title:str}', post_detail_view, methods=['GET', 'POST'])
 )

@@ -2,7 +2,7 @@
 {% block meta_description %}Posts{% endblock %}
 {% block title %}Blog{% endblock %}
 {% block body %}
-    <h1>My last posts2</h1>
+    <h1>My last posts</h1>
     {% for post in posts %}
         <h2><a href="/blog/{{ post.title_slug }}">{{ post.title }}</a></h2>
     {% endfor %}

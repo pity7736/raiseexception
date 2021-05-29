@@ -12,19 +12,26 @@
                 <p>{{ message }}</p>
             </div>
         {% endif %}
-        <form id="create-post" action="/admin/blog" method="post">
-            <label for="title">Title:</label>
-            <input id="title" name="title" type="text" required autofocus>
-            <label for="category_id">Category:</label>
-            <input id="category_id" name="category_id" list="category_values" required>
-            <datalist id="category_values">
-                {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-            </datalist>
-            <label for="body">Body:</label>
-            <textarea id="body" name="body" required></textarea>
-            <input type="submit" value="Create">
-        </form>
+        <section>
+            <form id="create-post" action="/admin/blog" method="post">
+                <label for="title">Title:</label>
+                <input id="title" name="title" type="text" required autofocus>
+                <label for="category_id">Category:</label>
+                <input id="category_id" name="category_id" list="category_values" required>
+                <datalist id="category_values">
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </datalist>
+                <label for="body">Body:</label>
+                <textarea id="body" name="body" required></textarea>
+                <input type="submit" value="Create">
+            </form>
+        </section>
+        <section>
+            {% for post in posts %}
+                <h2><a href="/blog/{{ post.title_slug }}">{{ post.title }}</a></h2>
+            {% endfor %}
+        </section>
     </body>
 </html>

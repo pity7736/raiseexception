@@ -21,7 +21,7 @@ def _filter_post_if_user_is_anonymous(user, queryset):
     return queryset
 
 
-async def index(request: Request):
+async def posts_view(request: Request):
     queryset = _filter_post_if_user_is_anonymous(request.user, Post.filter())
     posts = await queryset
     return settings.TEMPLATE.TemplateResponse(
@@ -30,7 +30,7 @@ async def index(request: Request):
     )
 
 
-async def post_detail(request: Request):
+async def post_detail_view(request: Request):
     queryset = Post.filter(title_slug=request.path_params['post_title'])
     queryset = _filter_post_if_user_is_anonymous(request.user, queryset)
     post = await queryset.get_or_none()
@@ -93,8 +93,8 @@ async def post_detail(request: Request):
 
 
 routes = (
-    Route('/', index),
-    Route('/{post_title:str}', post_detail, methods=['GET', 'POST'])
+    Route('/', posts_view),
+    Route('/{post_title:str}', post_detail_view, methods=['GET', 'POST'])
 )
 
 blog_views = Starlette(routes=routes)

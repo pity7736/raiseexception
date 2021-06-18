@@ -6,8 +6,8 @@ def test_get(test_client):
     response = test_client.get('/auth/login')
 
     assert response.status_code == 200
-    assert '<form id="login" action="#" method="post">' \
-           in response.text
+    assert '<form id="login" action="/auth/login" method="post">' \
+        in response.text
     assert '<label for="username">Username:</label>' in response.text
     assert '<input id="username" name="username" type="text" required ' \
            'autofocus>' in response.text

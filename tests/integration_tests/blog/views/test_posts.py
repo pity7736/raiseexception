@@ -64,10 +64,9 @@ def test_published_post_detail(db_connection, test_client, event_loop):
     response = test_client.get(f'/blog/{post.title_slug}')
 
     assert response.status_code == 200
-    assert f'<h1>{post.title}</h1>' in response.text
+    assert f'{post.title.capitalize()}' in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
-    assert f'<time datetime="{post.created_at.isoformat()}">{post.created_at}'\
-           f'</time>' in response.text
+    assert f'{post.created_at}' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
     assert '<form id="comment" method="post">' \
@@ -101,10 +100,9 @@ def test_published_post_detail_with_pending_comment(db_connection, test_client,
     response = test_client.get(f'/blog/{post.title_slug}')
 
     assert response.status_code == 200
-    assert f'<h1>{post.title}</h1>' in response.text
+    assert f'{post.title.capitalize()}' in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
-    assert f'<time datetime="{post.created_at.isoformat()}">{post.created_at}'\
-           f'</time>' in response.text
+    assert f'{post.created_at}' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
     assert '<form id="comment" method="post">' \
@@ -142,10 +140,9 @@ def test_draft_post_detail_with_authenticated_user(
     )
 
     assert response.status_code == 200
-    assert f'<h1>{post.title}</h1>' in response.text
+    assert post.title.capitalize() in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
-    assert f'<time datetime="{post.created_at.isoformat()}">{post.created_at}'\
-           f'</time>' in response.text
+    assert f'{post.created_at}' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         not in response.text
 

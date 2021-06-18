@@ -2,14 +2,14 @@
 {% block title %}{{ post.title_slug }}{% endblock %}
 {% block body %}
     {% include 'message.html' %}
-    <article>
-        <h1>{{ post.title }}</h1>
-        <time datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
-        <div>
+    <article class="bg-gray-800 container mx-auto pt-16">
+        <h1 class="text-center text-4xl">{{ post.title.capitalize() }}</h1>
+        <time class="pl-10 mt-10 bg-gray-100 block" datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
+        <div class="bg-gray-500 max-w-screen-sm mx-auto mt-16 px-10 text-justify md:px-0 space-y-4 text-base">
             {{ post_body|safe }}
         </div>
     </article>
-    <section>
+    <section class="bg-gray-600">
         <form id="comment" method="post">
             <label for="name">Name:</label>
             <input id="name" name="name" type="text" placeholder="name or alias">

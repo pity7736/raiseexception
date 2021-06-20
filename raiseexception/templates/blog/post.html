@@ -15,31 +15,33 @@
             <form id="comment" method="post">
                 <div class="flex flex-col mt-8 md:flex-row">
                     <label for="name" class="flex-initial md:w-28">Name</label>
-                    <input id="name" name="name" type="text" placeholder="name or alias" class="flex-auto mt-1 pl-2">
+                    <input id="name" name="name" type="text" placeholder="name or alias" class="flex-auto mt-1 pl-2 rounded">
                 </div>
                 <div class="flex flex-col md:flex-row">
                     <label for="email" class="flex-initial mt-3 md:w-28">Email</label>
-                    <input id="email" name="email" type="email" placeholder="email will not be published" class="flex-auto mt-1 pl-2">
+                    <input id="email" name="email" type="email" alt="text" placeholder="email will not be published" class="flex-auto mt-1 pl-2 rounded">
                 </div>
                 <div class="flex flex-col md:flex-row">
                     <label for="body" class="flex-initial mt-3 md:w-28">Comment *</label>
-                    <textarea id="body" name="body" rows="5" required class="flex-auto mt-1"></textarea>
+                    <textarea id="body" name="body" rows="5" required class="flex-auto mt-1 rounded"></textarea>
                 </div>
-                <input type="submit" value="Send" class="mt-4 bg-gray-800 rounded w-20 text-white left-0">
+                <input type="submit" value="Send" class="mt-4 bg-gray-800 rounded w-20 text-white">
             </form>
         </section>
         <section>
             {% if comments %}
-                <ul>Comments:
+                <ul class="mt-20">Comments:
                     {% for comment in comments %}
-                        <li>
-                            <div>{{ comment.name }}, {{ comment.created_at}}</div>
-                            <p>{{ comment.body }}</p>
+                        <li class="mt-6 bg-gray-200 p-2 rounded">
+                            <div>
+                                <p><strong>{{ comment.name.capitalize() }}</strong>, <time class="italic" datetime="{{ comment.created_at.isoformat() }}">{{ comment.created_at}}</time></p>
+                            </div>
+                            <p class="mt-2">{{ comment.body.capitalize() }}</p>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                 <p>There are no comments.</p>
+                 <p class="mt-20">There are no comments.</p>
             {% endif %}
         </section>
     </div>

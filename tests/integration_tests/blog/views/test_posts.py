@@ -82,8 +82,8 @@ def test_published_post_detail(db_connection, test_client, event_loop):
     #     in response.text
     # assert '<input type="submit" value="Send">' in response.text
     assert 'Comments:' in response.text
-    assert f'{post_comment.name}, {post_comment.created_at}' in response.text
-    assert f'<p>{post_comment.body}</p>' in response.text
+    assert post_comment.name.capitalize() in response.text
+    assert post_comment.body.capitalize() in response.text
 
 
 def test_published_post_detail_with_pending_comment(db_connection, test_client,

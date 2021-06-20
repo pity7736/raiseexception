@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}{{ post.title_slug }}{% endblock %}
 {% block body %}
-    {% include 'message.html' %}
     <div class="max-w-screen-md mx-auto px-10 md:px-0">
         <article class="container mx-auto pt-16">
             <h1 class="text-center text-4xl font-extrabold">{{ post.title.capitalize() }}</h1>
@@ -12,7 +11,7 @@
         </article>
         <section class="pt-16">
             <p>Leave a comment</p>
-            <form id="comment" method="post">
+            <form id="comment" method="post" class="mb-6">
                 <div class="flex flex-col mt-8 md:flex-row">
                     <label for="name" class="flex-initial md:w-28">Name</label>
                     <input id="name" name="name" type="text" placeholder="name or alias" class="flex-auto mt-1 pl-2 rounded">
@@ -27,6 +26,7 @@
                 </div>
                 <input type="submit" value="Send" class="mt-4 bg-gray-800 rounded w-20 text-white">
             </form>
+            {% include 'message.html' %}
         </section>
         <section>
             {% if comments %}

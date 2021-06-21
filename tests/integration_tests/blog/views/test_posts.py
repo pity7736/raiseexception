@@ -19,12 +19,12 @@ def test_lists_with_anonymous_user(db_connection, test_client, event_loop):
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
     for post in posts:
-        assert f'<h2><a href="/blog/{post.title_slug}">{post.title}</a></h2>'\
-            in response.text
+        assert post.title_slug in response.text
+        assert post.title.capitalize() in response.text
 
     for post in draft_posts:
-        assert f'<h2><a href="/blog/{post.title_slug}">{post.title}</a></h2>'\
-            not in response.text
+        assert post.title_slug not in response.text
+        assert post.title.capitalize() not in response.text
 
 
 def test_lists_with_authenticated_user(
@@ -42,12 +42,12 @@ def test_lists_with_authenticated_user(
     assert '<script async defer data-domain="raiseexception.dev"' \
         not in response.text
     for post in posts:
-        assert f'<h2><a href="/blog/{post.title_slug}">{post.title}</a></h2>'\
-            in response.text
+        assert post.title_slug in response.text
+        assert post.title.capitalize() in response.text
 
     for post in draft_posts:
-        assert f'<h2><a href="/blog/{post.title_slug}">{post.title}</a></h2>'\
-            in response.text
+        assert post.title_slug in response.text
+        assert post.title.capitalize() in response.text
 
 
 def test_published_post_detail(db_connection, test_client, event_loop):

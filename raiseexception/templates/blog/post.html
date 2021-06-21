@@ -2,6 +2,7 @@
 {% block title %}{{ post.title_slug }}{% endblock %}
 {% block body %}
     <div class="max-w-screen-md mx-auto px-10 md:px-0">
+        <p class="mt-6"><a href="/blog">Blog</a></p>
         <article class="container mx-auto pt-16">
             <h1 class="text-center text-4xl font-extrabold">{{ post.title.capitalize() }}</h1>
             <time class="mt-10 block text-sm" datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>

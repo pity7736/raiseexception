@@ -1,3 +1,5 @@
+import datetime
+
 from pytest import mark
 
 from raiseexception.blog.constants import PostState
@@ -198,3 +200,17 @@ def test_update_post_with_wrong_field(db_connection, event_loop, test_client,
     )
     assert response.status_code == 400
     assert '<p>"wrong_field" is an invalid field</p>'
+
+
+def test_publish_post(db_connection, event_loop, test_client, cookies_fixture):
+    post = event_loop.run_until_complete(PostFactory.create())
+    response = test_client.post(
+        '/admin/blog/publish',
+        cookies=cookies_fixture,
+        data={'post_id': post.id}
+    )
+    published_post = event_loop.run_until_complete(Post.get(id=post.id))
+
+    assert response.status_code == 302
+    assert published_post.state == PostState.PUBLISHED
+    assert published_post.published_at.date() == datetime.date.today()

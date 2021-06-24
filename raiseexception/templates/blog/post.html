@@ -5,7 +5,9 @@
         <p class="mt-6"><a href="/blog">Blog</a></p>
         <article class="container mx-auto pt-16">
             <h1 class="text-center text-4xl font-extrabold">{{ post.title.capitalize() }}</h1>
-            <time class="mt-10 block text-sm" datetime="{{ post.created_at.isoformat() }}">{{ post.created_at }}</time>
+            {% if post.published_at %}
+                <time class="mt-10 block text-sm"  datetime="{{ post.published_at.isoformat() }}">{{ post.published_at }}</time>
+            {% endif %}}
             <div class="mt-16 text-justify md:px-0 space-y-4 text-base">
                 {{ post_body|safe }}
             </div>

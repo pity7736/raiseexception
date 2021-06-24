@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -7,7 +8,7 @@ from starlette.routing import Route
 
 from raiseexception import settings
 from raiseexception.auth.decorators import login_required
-from raiseexception.blog.constants import PostCommentState
+from raiseexception.blog.constants import PostCommentState, PostState
 from raiseexception.blog.controllers import CreatePost
 from raiseexception.blog.models import Category, PostComment, Post
 from raiseexception.mailing.client import MailClient
@@ -128,10 +129,24 @@ async def post_detail_view(request: Request):
     )
 
 
+@login_required
+async def publish_post_view(request: Request):
+    data = await request.form()
+    post = await Post.get(id=int(data['post_id']))
+    post.state = PostState.PUBLISHED
+    post.published_at = datetime.datetime.now()
+    await post.save()
+    return RedirectResponse(
+        url=f'/admin/blog/{post.title_slug}',
+        status_code=302
+    )
+
+
 routes = (
     Route('/', index),
     Route('/blog', posts_view, methods=['GET', 'POST']),
     Route('/blog/comments', comments_view, methods=['GET', 'POST']),
+    Route('/blog/publish', publish_post_view, methods=['POST']),
     Route('/blog/{post_title:str}', post_detail_view, methods=['GET', 'POST'])
 )
 

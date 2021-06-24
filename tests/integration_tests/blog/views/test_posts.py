@@ -1,3 +1,5 @@
+import datetime
+
 import markdown
 
 from raiseexception.blog.constants import PostState, PostCommentState
@@ -52,7 +54,10 @@ def test_lists_with_authenticated_user(
 
 def test_published_post_detail(db_connection, test_client, event_loop):
     post = event_loop.run_until_complete(
-        PostFactory.create(state=PostState.PUBLISHED)
+        PostFactory.create(
+            state=PostState.PUBLISHED,
+            published_at=datetime.datetime.now()
+        )
     )
     post_comment = event_loop.run_until_complete(PostComment.create(
         name='test name',
@@ -66,7 +71,7 @@ def test_published_post_detail(db_connection, test_client, event_loop):
     assert response.status_code == 200
     assert f'{post.title.capitalize()}' in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
-    assert f'{post.created_at}' in response.text
+    assert f'{post.published_at}' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
     # assert '<form id="comment" method="post">' \
@@ -89,7 +94,10 @@ def test_published_post_detail(db_connection, test_client, event_loop):
 def test_published_post_detail_with_pending_comment(db_connection, test_client,
                                                     event_loop):
     post = event_loop.run_until_complete(
-        PostFactory.create(state=PostState.PUBLISHED)
+        PostFactory.create(
+            state=PostState.PUBLISHED,
+            published_at=datetime.datetime.now()
+        )
     )
     post_comment = event_loop.run_until_complete(PostComment.create(
         name='test name',
@@ -102,7 +110,7 @@ def test_published_post_detail_with_pending_comment(db_connection, test_client,
     assert response.status_code == 200
     assert f'{post.title.capitalize()}' in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
-    assert f'{post.created_at}' in response.text
+    assert f'{post.published_at}' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         in response.text
     # assert '<form id="comment" method="post">' \
@@ -142,7 +150,6 @@ def test_draft_post_detail_with_authenticated_user(
     assert response.status_code == 200
     assert post.title.capitalize() in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
-    assert f'{post.created_at}' in response.text
     assert '<script async defer data-domain="raiseexception.dev"' \
         not in response.text
 

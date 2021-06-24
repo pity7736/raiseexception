@@ -16,6 +16,7 @@ class Post(Model):
     _state = fields.CharField(choices=PostState, default_value=PostState.DRAFT)
     _category = fields.ForeignKeyField(to=Category)
     _author = fields.ForeignKeyField(to=User)
+    _published_at = fields.DatetimeField()
     _created_at = fields.DatetimeField(auto_now_add=True)
     _modified_at = fields.DatetimeField(auto_now=True)
 

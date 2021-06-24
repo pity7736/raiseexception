@@ -24,5 +24,9 @@
             <textarea id="body" name="body" required>{{ post.body }}</textarea>
             <input type="submit" value="Update">
         </form>
+        <form id="publish-post" method="post" action="/admin/blog/publish">
+            <input type="hidden" name="post_id" value="{{ post.id }}">
+            <input type="submit" value="Publish">
+        </form>
     </body>
 </html>

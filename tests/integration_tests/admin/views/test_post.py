@@ -129,9 +129,6 @@ def test_get_post(db_connection, event_loop, test_client, cookies_fixture):
     assert f'<option value="{category3.id}">{category3.name}</option>' \
         in response.text
     assert '</datalist>' in response.text
-    assert '<label for="state">State:</label>' in response.text
-    assert f'<input id="state" type="text" name="state" value="' \
-           f'{post.state.value}">' in response.text
     assert '<label for="body">Body:</label>' in response.text
     assert '<textarea id="body" name="body" required>' \
            f'{post.body}</textarea>' in response.text

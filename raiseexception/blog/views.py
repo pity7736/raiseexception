@@ -73,7 +73,7 @@ async def post_detail_view(request: Request):
     post_body = markdown.markdown(
         text=post.body,
         output_format='html5',
-        extensions=['codehilite']
+        extensions=['codehilite', 'fenced_code', 'tables', 'footnotes']
     )
     comments = await PostComment.filter(
         post_id=post.id,

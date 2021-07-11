@@ -26,10 +26,11 @@ def test_authenticated(db_connection, event_loop, test_client):
 def test_redirect_to_next_after_login(db_connection, event_loop, test_client):
     user = event_loop.run_until_complete(UserFactory.create())
     first_response = test_client.get('/admin/blog')
-    location = first_response.history[-1].headers['location']
+    next_url = first_response.history[-1].headers['location']
     response = test_client.post(
-        location,
+        next_url,
         data={'username': user.username, 'password': UserFactory.password}
     )
 
+    assert next_url == '/auth/login?next=/admin/blog'
     assert response.headers['location'] == '/admin/blog'

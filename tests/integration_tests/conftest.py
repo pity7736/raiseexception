@@ -73,12 +73,12 @@ def test_client():
 
 
 @fixture
-async def user_fixture():
+async def user_fixture(db_connection):
     return await UserFactory.create()
 
 
 @fixture
-async def category_fixture():
+async def category_fixture(db_connection):
     return await CategoryFactory.create()
 
 

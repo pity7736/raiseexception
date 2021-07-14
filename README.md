@@ -18,6 +18,7 @@ This is the code for my personal website. Under development.
 ### version 1.1.0
 
 - remove token field from Subscription. Maybe use temporary token
+- images in post
 - subscriptions (newsletter)
 - score post
 - share post
@@ -25,9 +26,5 @@ This is the code for my personal website. Under development.
     - linkedin
 
 ### version 1.2.0
-
-- list some posts on index view
-
-### version 1.3.0
 
 - Refactors (specially kinton related)

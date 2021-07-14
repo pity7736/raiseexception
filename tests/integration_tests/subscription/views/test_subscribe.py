@@ -45,6 +45,23 @@ def test_subscribe_without_name(db_connection, test_client, event_loop):
     assert subscription.email == 'test@email.com'
 
 
+def test_subscribe_with_empty_name(db_connection, test_client, event_loop):
+    response = test_client.post(
+        '/subscription/',
+        data={
+            'name': '',
+            'email': 'test@email.com'
+        }
+    )
+    subscription = event_loop.run_until_complete(
+        Subscription.get()
+    )
+
+    assert response.status_code == 201
+    assert subscription.name == 'anonymous'
+    assert subscription.email == 'test@email.com'
+
+
 def test_subscribe_without_email(db_connection, test_client, event_loop):
     response = test_client.post(
         '/subscription/',

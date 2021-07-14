@@ -21,7 +21,7 @@ async def subscribe_view(request: Request):
             subscription = await Subscription.get_or_none(email=email)
             message = 'the email was already subscribed'
             if not subscription:
-                name = data.get('name')
+                name = data.get('name') or None
                 token = get_random_string(length=100)
                 # TODO: nyoibo - refactor this with entity validations
                 try:

@@ -11,7 +11,7 @@ This is the code for my personal website. Under development.
     - ~~to comment owner when comment is approved (only if email was set)~~
 - ~~publish post~~
 - ~~template inheritance (public pages)~~
-- styles (public pages)
+- ~~styles (public pages)~~
 - privacy policy
 - ~~subscriptions (save email)~~
 

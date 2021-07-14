@@ -12,7 +12,7 @@ This is the code for my personal website. Under development.
 - ~~publish post~~
 - ~~template inheritance (public pages)~~
 - ~~styles (public pages)~~
-- privacy policy
+- ~~privacy policy~~
 - ~~subscriptions (save email)~~
 
 ### version 1.1.0

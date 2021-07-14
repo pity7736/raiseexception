@@ -21,11 +21,19 @@ def index(request):
     )
 
 
+def privacy_policy_view(request):
+    return settings.TEMPLATE.TemplateResponse(
+        'privacy_policy.html',
+        {'request': request}
+    )
+
+
 routes = [
     Route('/', index),
     Mount('/auth', routes=auth_views.routes, name='auth'),
     Mount('/admin', routes=admin_views.routes, name='admin'),
     Mount('/blog', routes=blog_views.routes, name='blog'),
+    Route('/privacy-policy', privacy_policy_view, name='privacy_policy'),
     Mount(
         '/subscription',
         routes=subscription_views.routes,

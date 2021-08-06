@@ -12,7 +12,7 @@
 {% endblock %}
 {% block title %} {{ post.title_slug }} {% endblock %}
 {% block body %}
-    <div class="max-w-screen-md mx-auto px-10 md:px-0">
+    <div class="max-w-screen-md mx-auto mb-6 px-10 md:px-0">
         <p class="mt-6"><a href="/blog">Blog</a></p>
         <article class="container mx-auto pt-16">
             <h1 class="text-center text-4xl font-extrabold">{{ post.title.capitalize() }}</h1>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="flex flex-col md:flex-row">
                     <label for="body" class="flex-initial mt-3 md:w-28">Comment *</label>
-                    <textarea id="body" name="body" rows="5" required class="flex-auto mt-1 rounded"></textarea>
+                    <textarea id="body" name="body" rows="5" required class="flex-auto mt-1 rounded pl-2"></textarea>
                 </div>
                 <input type="submit" value="Send" class="mt-4 bg-gray-800 rounded w-20 text-white">
             </form>

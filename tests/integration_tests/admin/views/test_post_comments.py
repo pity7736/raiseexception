@@ -24,6 +24,7 @@ def test_list_comments(db_connection, test_client, event_loop,
     for comment in comments:
         assert comment.name in response.text
         assert comment.post.title in response.text
+        assert comment.body in response.text
         assert f'<input name="approve" type="checkbox" value="{post.id}">' \
             in response.text
 

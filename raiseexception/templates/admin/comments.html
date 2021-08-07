@@ -18,8 +18,9 @@
                 <ul>
                     {% for comment in comments %}
                         <li>
-                            <p>{{ comment.name }}</p>
-                            <p>{{ comment.post.title }}</p>
+                            <p>Post title: {{ comment.post.title }}</p>
+                            <p>Name: {{ comment.name }}</p>
+                            <p>Comment: {{ comment.body }}</p>
                             <input name="approve" type="checkbox" value="{{ comment.id }}">
                         </li>
                     {% endfor %}

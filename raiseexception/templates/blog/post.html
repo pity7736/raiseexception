@@ -48,7 +48,7 @@
                     {% for comment in comments %}
                         <li class="mt-6 bg-gray-200 p-2 rounded">
                             <div>
-                                <p><strong>{{ comment.name.capitalize() }}</strong>, <time class="italic" datetime="{{ comment.created_at.isoformat() }}">{{ comment.created_at}}</time></p>
+                                <p><strong>{{ comment.name.capitalize() }}</strong>, <time class="italic" datetime="{{ comment.created_at.isoformat() }}">{{ comment.created_at.date()}}</time></p>
                             </div>
                             <p class="mt-2">{{ comment.body.capitalize() }}</p>
                         </li>

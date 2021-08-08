@@ -22,7 +22,7 @@ class MailClient:
                         {
                             'From': {
                                 'Email': 'no-reply@raiseexception.dev',
-                                'Name': 'test name'
+                                'Name': 'RaiseException'
                             },
                             'To': [
                                 {

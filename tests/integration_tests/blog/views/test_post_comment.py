@@ -27,7 +27,8 @@ def test_success(db_connection, test_client, event_loop, mocker):
     assert comment.email == 'anonymous@protonmail.com'
     assert "<p>The comment has been created in pending state. It will be " \
            "displayed when it's approved. I'll let you know by email if the " \
-           "email was sent.</p>"
+           "email was sent.</p>".replace("'", '&#39;') in response.text
+
     event_loop.run_until_complete(asyncio.sleep(1))
     assert mail_client_spy.spy_return is True
     mail_client_spy.assert_called_once()

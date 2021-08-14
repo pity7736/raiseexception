@@ -11,6 +11,7 @@ class CreatePost(Entity):
     _body = fields.StrField()
     _category_id = fields.StrField()
     _author = fields.LinkField(to=User)
+    _description = fields.StrField()
 
     async def create(self) -> Post:
         self._validate_data()
@@ -20,7 +21,8 @@ class CreatePost(Entity):
                 title=self._title,
                 body=self._body,
                 category_id=self._category_id,
-                author=self._author
+                author=self._author,
+                description=self._description
             )
         except exceptions.ForeignKeyViolationError:
             raise ValueError('does not exists category with id: '
@@ -36,6 +38,8 @@ class CreatePost(Entity):
             raise ValueError('category_id is obligatory')
         if not self._author:
             raise ValueError('author is obligatory')
+        if not self._description:
+            raise ValueError('description is obligatory')
 
     async def _resolve_category_id(self):
         if self._category_id.isdigit() is False:

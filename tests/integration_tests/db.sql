@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS posts(
   title VARCHAR(200) NOT NULL,
   title_slug VARCHAR(200) NOT NULL,
   body TEXT NOT NULL,
+  description TEXT NOT NULL,
   state VARCHAR(30) NOT NULL,
   category_id INTEGER REFERENCES categories NOT NULL,
   author_id INTEGER REFERENCES users NOT NULL,

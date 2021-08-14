@@ -13,6 +13,7 @@ class Post(Model):
     _title = fields.CharField()
     _title_slug = fields.CharField(immutable=True)
     _body = fields.CharField()
+    _description = fields.CharField()
     _state = fields.CharField(choices=PostState, default_value=PostState.DRAFT)
     _category = fields.ForeignKeyField(to=Category)
     _author = fields.ForeignKeyField(to=User)

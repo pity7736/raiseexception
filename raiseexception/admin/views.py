@@ -33,7 +33,8 @@ async def posts_view(request):
             title=data.get('title'),
             body=data.get('body'),
             category_id=data.get('category_id'),
-            author=request.user
+            author=request.user,
+            description=data.get('description')
         )
         try:
             await create_post.create()

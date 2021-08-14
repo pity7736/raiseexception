@@ -5,7 +5,7 @@ from raiseexception.blog.models import Post
 
 
 @mark.asyncio
-async def test_success(db_connection, user_fixture, category_fixture):
+async def test_create(db_connection, user_fixture, category_fixture):
     body = '''
         # post title
 
@@ -22,7 +22,8 @@ async def test_success(db_connection, user_fixture, category_fixture):
         title='test title',
         body=body,
         category=category_fixture,
-        author=user_fixture
+        author=user_fixture,
+        description='test description'
     )
     post = await Post.get(title='test title')
     await post.category.fetch()
@@ -36,3 +37,4 @@ async def test_success(db_connection, user_fixture, category_fixture):
     assert post.modified_at
     assert post.created_at == post.modified_at
     assert post.state == PostState.DRAFT
+    assert post.description == 'test description'

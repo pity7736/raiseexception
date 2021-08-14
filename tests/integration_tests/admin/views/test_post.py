@@ -45,7 +45,8 @@ def test_create_post(db_connection, event_loop, test_client, cookies_fixture):
         data={
             'title': 'test title',
             'body': 'test body',
-            'category_id': category.id
+            'category_id': category.id,
+            'description': 'test description'
         }
     )
 
@@ -77,7 +78,8 @@ def test_create_post_with_new_category(db_connection, event_loop, test_client,
         data={
             'title': 'test title',
             'body': 'test body',
-            'category_id': 'new category'
+            'category_id': 'new category',
+            'description': 'test description'
         }
     )
 
@@ -94,7 +96,8 @@ def test_send_author_field(db_connection, event_loop, test_client,
             'title': 'test title',
             'body': 'test body',
             'category_id': 'new category',
-            'author': '__pity__'
+            'author': '__pity__',
+            'description': 'test description'
         }
     )
 

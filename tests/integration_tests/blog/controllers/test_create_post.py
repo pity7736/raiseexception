@@ -10,7 +10,8 @@ async def test_success(db_connection, user_fixture, category_fixture):
         'title': 'test post',
         'body': 'test body',
         'category_id': category_fixture.id,
-        'author': user_fixture
+        'author': user_fixture,
+        'description': 'test description'
     }
     create_post = CreatePost(**data)
     post = await create_post.create()
@@ -37,7 +38,7 @@ async def test_missing_data(field, expected_message, db_connection,
         'title': 'test post',
         'body': 'test body',
         'category_id': category_fixture.id,
-        'author': user_fixture
+        'author': user_fixture,
     }
     data.pop(field)
     create_post = CreatePost(**data)
@@ -53,7 +54,8 @@ async def test_category_does_not_exists(db_connection, user_fixture):
         'title': 'test post',
         'body': 'test body',
         'category_id': 10000000,
-        'author': user_fixture
+        'author': user_fixture,
+        'description': 'test description'
     }
     create_post = CreatePost(**data)
     with raises(ValueError) as e:

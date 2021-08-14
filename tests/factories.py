@@ -44,6 +44,7 @@ class PostFactory(AsyncFactory):
     body = factory.Faker('paragraph')
     category = factory.SubFactory(CategoryFactory)
     author = factory.SubFactory(UserFactory)
+    description = factory.Faker('sentence')
 
     class Meta:
         model = Post

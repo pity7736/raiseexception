@@ -18,6 +18,8 @@
                     <option value="{{ category.id }}">{{ category.name }}</option>
                 {% endfor %}
             </datalist>
+            <label for="description">Description:</label>
+            <input id="description" name="description" type="text" required value="{{ post.description }}">
             <label for="body">Body:</label>
             <textarea id="body" name="body" required>{{ post.body }}</textarea>
             <input type="submit" value="Update">

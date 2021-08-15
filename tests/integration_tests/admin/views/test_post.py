@@ -30,6 +30,9 @@ def test_get_posts(db_connection, event_loop, test_client, cookies_fixture):
     assert f'<option value="{category3.id}">{category3.name}</option>' \
         in response.text
     assert '</datalist>' in response.text
+    assert '<label for="description">Description:</label>' in response.text
+    assert '<input id="description" name="description" type="text" required>' \
+        in response.text
     assert '<label for="body">Body:</label>' in response.text
     assert '<textarea id="body" name="body" required></textarea>' \
         in response.text
@@ -132,6 +135,9 @@ def test_get_post(db_connection, event_loop, test_client, cookies_fixture):
     assert f'<option value="{category3.id}">{category3.name}</option>' \
         in response.text
     assert '</datalist>' in response.text
+    assert '<label for="description">Description:</label>' in response.text
+    assert '<input id="description" name="description" type="text" required ' \
+           f'value="{post.description}">' in response.text
     assert '<label for="body">Body:</label>' in response.text
     assert '<textarea id="body" name="body" required>' \
            f'{post.body}</textarea>' in response.text
@@ -161,6 +167,11 @@ post_data_params = (
             'body': 'new post body'
         }
     ),
+    (
+        {
+            'description': 'new post description'
+        }
+    ),
 )
 
 
@@ -187,6 +198,9 @@ def test_update_post(db_connection, event_loop, test_client, cookies_fixture,
     if 'body' in post_data:
         assert updated_post.body != post.body
         assert updated_post.body == post_data['body']
+    if 'description' in post_data:
+        assert updated_post.description != post.description
+        assert updated_post.description == post_data['description']
     assert '<p>post updated successfully</p>' in response.text
 
 

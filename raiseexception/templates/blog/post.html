@@ -2,10 +2,12 @@
 {% block extra_meta %}
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@__pity_">
+    <meta name="twitter:creator" content="@__pity_">
     <meta name="twitter:title" content="{{ post.title.capitalize() }}">
+    <meta name="twitter:description" content="{{ post.description.capitalize() }}">
     <meta property="og:title" content="{{ post.title.capitalize() }}">
     <meta property="og:url" content="https://raiseexception.dev/blog/{{ post.title_slug }}">
-    <meta property="og:description" content="I'm software developer">
+    <meta property="og:description" content="{{ post.description.capitalize() }}">
 {% endblock %}
 {% block extra_head %}
     <link rel="stylesheet" href="/static/css/code_styles.css">

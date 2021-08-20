@@ -2,11 +2,9 @@
 {% block meta_description %}Posts{% endblock %}
 {% block title %}Blog{% endblock %}
 {% block body %}
-    <div class="max-w-screen-md mx-auto mt-16 px-10 md:px-0">
-        <h1 class="text-center text-4xl font-extrabold mb-20">Last posts</h1>
-        {% for post in posts %}
-            <h2 class="text-2xl mt-10"><a href="/blog/{{ post.title_slug }}">{{ post.title.capitalize() }}</a></h2>
-            <p class="mt-4">{{ post.description.capitalize() }} <a href="/blog/{{ post.title_slug }}">Read more.</a></p>
-        {% endfor %}
-    </div>
+    <h1 class="text-center text-4xl font-extrabold my-20">Last posts</h1>
+    {% for post in posts %}
+        <h2 class="text-2xl mt-10"><a href="/blog/{{ post.title_slug }}">{{ post.title.capitalize() }}</a></h2>
+        <p class="mt-4">{{ post.description.capitalize() }} <a href="/blog/{{ post.title_slug }}">Read more.</a></p>
+    {% endfor %}
 {% endblock %}

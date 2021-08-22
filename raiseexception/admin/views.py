@@ -84,7 +84,7 @@ async def comments_view(request: Request):
                 await comment.post.fetch()
                 post = comment.post
                 mail_tasks.append(mail_client.send(
-                    to=To(email=comment.email, name='Julián'),
+                    to=To(email=comment.email, name=comment.name),
                     subject='Comment approved',
                     message=f'Hi {comment.name}, you comment was approved. '
                             f'Check it <a href="{settings.SITE}/blog'

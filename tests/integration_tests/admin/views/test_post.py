@@ -5,7 +5,6 @@ from pytest import mark
 from raiseexception.blog.constants import PostState
 from raiseexception.blog.models import Post
 from raiseexception.mailing.client import MailClient
-from raiseexception.subscription.models import Subscription
 from tests.factories import CategoryFactory, PostFactory, SubscriptionFactory
 
 
@@ -221,11 +220,7 @@ def test_update_post_with_wrong_field(db_connection, event_loop, test_client,
 def test_publish_post(db_connection, event_loop, test_client, cookies_fixture,
                       mocker):
     post = event_loop.run_until_complete(PostFactory.create())
-    event_loop.run_until_complete(Subscription.create(
-        name='Julián',
-        email='test@raiseexception.dev',
-        verified=True
-    ))
+    event_loop.run_until_complete(SubscriptionFactory.create(verified=True))
     mail_client_spy = mocker.spy(MailClient, 'send')
     response = test_client.post(
         '/admin/blog/publish',

@@ -13,6 +13,7 @@ from raiseexception.blog.controllers import CreatePost
 from raiseexception.blog.models import Category, PostComment, Post
 from raiseexception.mailing.client import MailClient
 from raiseexception.mailing.models import To
+from raiseexception.subscription.models import Subscription
 
 
 @login_required
@@ -137,6 +138,16 @@ async def publish_post_view(request: Request):
     post.state = PostState.PUBLISHED
     post.published_at = datetime.datetime.now()
     await post.save()
+    subscriptions = await Subscription.filter(verified=True)
+    email_client = MailClient()
+    emails_to_send = []
+    for subscription in subscriptions:
+        emails_to_send.append(email_client.send(
+            to=To(email=subscription.email, name=subscription.name),
+            subject='A new post was published!',
+            message=f'Hi {subscription.name}, a new post was published...'
+        ))
+    await asyncio.gather(*emails_to_send)
     return RedirectResponse(
         url=f'/admin/blog/{post.title_slug}',
         status_code=302

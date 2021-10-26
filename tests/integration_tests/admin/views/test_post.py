@@ -4,7 +4,9 @@ from pytest import mark
 
 from raiseexception.blog.constants import PostState
 from raiseexception.blog.models import Post
-from tests.factories import CategoryFactory, PostFactory
+from raiseexception.mailing.client import MailClient
+from raiseexception.subscription.models import Subscription
+from tests.factories import CategoryFactory, PostFactory, SubscriptionFactory
 
 
 def test_get_posts(db_connection, event_loop, test_client, cookies_fixture):
@@ -216,8 +218,15 @@ def test_update_post_with_wrong_field(db_connection, event_loop, test_client,
     assert '<p>"wrong_field" is an invalid field</p>'
 
 
-def test_publish_post(db_connection, event_loop, test_client, cookies_fixture):
+def test_publish_post(db_connection, event_loop, test_client, cookies_fixture,
+                      mocker):
     post = event_loop.run_until_complete(PostFactory.create())
+    event_loop.run_until_complete(Subscription.create(
+        name='Julián',
+        email='test@raiseexception.dev',
+        verified=True
+    ))
+    mail_client_spy = mocker.spy(MailClient, 'send')
     response = test_client.post(
         '/admin/blog/publish',
         cookies=cookies_fixture,
@@ -228,3 +237,55 @@ def test_publish_post(db_connection, event_loop, test_client, cookies_fixture):
     assert response.status_code == 302
     assert published_post.state == PostState.PUBLISHED
     assert published_post.published_at.date() == datetime.date.today()
+    mail_client_spy.assert_called_once()
+
+
+def test_publish_post_with_many_subscribers(
+        db_connection,
+        event_loop,
+        test_client,
+        cookies_fixture,
+        mocker):
+    post = event_loop.run_until_complete(PostFactory.create())
+    event_loop.run_until_complete(SubscriptionFactory.create_batch(
+        size=5,
+        verified=True
+    ))
+    mail_client_spy = mocker.spy(MailClient, 'send')
+    response = test_client.post(
+        '/admin/blog/publish',
+        cookies=cookies_fixture,
+        data={'post_id': post.id}
+    )
+    published_post = event_loop.run_until_complete(Post.get(id=post.id))
+
+    assert response.status_code == 302
+    assert published_post.state == PostState.PUBLISHED
+    assert published_post.published_at.date() == datetime.date.today()
+    assert mail_client_spy.call_count == 5
+
+
+def test_publish_post_with_many_subscribers_and_some_not_verified(
+        db_connection,
+        event_loop,
+        test_client,
+        cookies_fixture,
+        mocker):
+    post = event_loop.run_until_complete(PostFactory.create())
+    event_loop.run_until_complete(SubscriptionFactory.create_batch(
+        size=3,
+        verified=True
+    ))
+    event_loop.run_until_complete(SubscriptionFactory.create_batch(size=3))
+    mail_client_spy = mocker.spy(MailClient, 'send')
+    response = test_client.post(
+        '/admin/blog/publish',
+        cookies=cookies_fixture,
+        data={'post_id': post.id}
+    )
+    published_post = event_loop.run_until_complete(Post.get(id=post.id))
+
+    assert response.status_code == 302
+    assert published_post.state == PostState.PUBLISHED
+    assert published_post.published_at.date() == datetime.date.today()
+    assert mail_client_spy.call_count == 3

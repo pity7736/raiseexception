@@ -5,6 +5,7 @@ from kinton import Model
 
 from raiseexception.accounts.models import User
 from raiseexception.blog.models import Category, Post, PostComment
+from raiseexception.subscription.models import Subscription
 
 
 class AsyncFactory(factory.Factory):
@@ -58,3 +59,12 @@ class PostCommentFactory(AsyncFactory):
 
     class Meta:
         model = PostComment
+
+
+class SubscriptionFactory(AsyncFactory):
+    name = factory.Faker('name')
+    email = factory.Faker('email')
+    verified = False
+
+    class Meta:
+        model = Subscription

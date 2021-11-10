@@ -18,8 +18,8 @@ def test_lists_with_anonymous_user(db_connection, test_client, event_loop):
     response = test_client.get('/blog')
 
     assert response.status_code == 200
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        in response.text
+    assert '<script defer data-api="/analytics/event" data-domain=' \
+           '"raiseexception.dev"' in response.text
     for post in posts:
         assert post.title_slug in response.text
         assert post.title.capitalize() in response.text
@@ -41,8 +41,8 @@ def test_lists_with_authenticated_user(
     response = test_client.get('/blog', cookies=cookies_fixture)
 
     assert response.status_code == 200
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        not in response.text
+    assert '<script defer data-api="/analytics/event" data-domain="' \
+           'raiseexception.dev"' not in response.text
     for post in posts:
         assert post.title_slug in response.text
         assert post.title.capitalize() in response.text
@@ -72,8 +72,8 @@ def test_published_post_detail(db_connection, test_client, event_loop):
     assert f'{post.title.capitalize()}' in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
     assert f'{post.published_at.date()}' in response.text
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        in response.text
+    assert '<script defer data-api="/analytics/event" data-domain=' \
+           '"raiseexception.dev"' in response.text
     # assert '<form id="comment" method="post">' \
     #     in response.text
     assert 'Name' in response.text
@@ -111,8 +111,8 @@ def test_published_post_detail_with_pending_comment(db_connection, test_client,
     assert f'{post.title.capitalize()}' in response.text
     assert f'{markdown.markdown(post.body)}' in response.text
     assert f'{post.published_at.date()}' in response.text
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        in response.text
+    assert '<script defer data-api="/analytics/event" data-domain=' \
+           '"raiseexception.dev"' in response.text
     # assert '<form id="comment" method="post">' \
     #     in response.text
     assert 'Name' in response.text

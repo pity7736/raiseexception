@@ -46,8 +46,8 @@ def test_get_with_fake_cookie(db_connection, event_loop, test_client):
         allow_redirects=False
     )
     assert response.status_code == 200
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        in response.text
+    assert '<script defer data-api="/analytics/event" data-domain=' \
+           '"raiseexception.dev"' in response.text
 
 
 def test_post_success(db_connection, event_loop, test_client):

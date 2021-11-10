@@ -6,8 +6,8 @@ def test_homepage_with_anonymous_user(test_client):
     assert response.template.name == 'index.html'
     assert "<title>Raise Exception | Julián Cortés Personal Website</title>" \
         in response.text
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        in response.text
+    assert '<script defer data-api="/analytics/event" data-domain=' \
+           '"raiseexception.dev"' in response.text
 
 
 def test_homepage_with_authenticated_user(db_connection, test_client,
@@ -18,5 +18,5 @@ def test_homepage_with_authenticated_user(db_connection, test_client,
     assert response.template.name == 'index.html'
     assert "<title>Raise Exception | Julián Cortés Personal Website</title>" \
         in response.text
-    assert '<script async defer data-domain="raiseexception.dev"' \
-        not in response.text
+    assert '<script defer data-api="/analytics/event" data-domain=' \
+           '"raiseexception.dev"' not in response.text

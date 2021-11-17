@@ -146,8 +146,9 @@ async def publish_post_view(request: Request):
             to=To(email=subscription.email, name=subscription.name),
             subject='A new post was published!',
             message=f'Hi {subscription.name}, a new post was published. Read '
-                    f'it <a href="{settings.SITE}/blog/{post.title_slug}">'
-                    f'here</a>'
+                    f'it <a href="{settings.SITE}/blog/{post.title_slug}?'
+                    f'utm_campaign=Newsletter&utm_medium=Email'
+                    f'&utm_source=Email">here</a>'
         ))
     await asyncio.gather(*emails_to_send)
     return RedirectResponse(

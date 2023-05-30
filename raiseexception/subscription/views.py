@@ -1,3 +1,4 @@
+import httpx
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.routing import Route
@@ -9,6 +10,33 @@ from raiseexception.subscription.models import Subscription
 from raiseexception.utils.crypto import get_random_string
 
 
+def validate_captcha(f):
+    async def _validate(request: Request):
+        if request.method == 'POST':
+            data = await request.form()
+            if settings.DEBUG is False:
+                captcha_token = data.get('h-captcha-response')
+                if captcha_token:
+                    async with httpx.AsyncClient() as client:
+                        response = await client.post(
+                            url='https://hcaptcha.com/siteverify',
+                            headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                            data={'response': captcha_token, 'secret': settings.HCAPTCHA_SECRET}
+                        )
+                        response_data = response.json()
+                        if response_data['success'] is True:
+                            return await f(request)
+
+            return settings.TEMPLATE.TemplateResponse(
+                name='/subscription/subscribe.html',
+                status_code=400,
+                context={'request': request, 'message': 'error validando captcha'}
+            )
+        return await f(request)
+    return _validate
+
+
+@validate_captcha
 async def subscribe_view(request: Request):
     status_code = 200
     message = ''
@@ -49,7 +77,7 @@ async def subscribe_view(request: Request):
     return settings.TEMPLATE.TemplateResponse(
         name='/subscription/subscribe.html',
         status_code=status_code,
-        context={'request': request, 'message': message}
+        context={'request': request, 'message': message, 'debug': settings.DEBUG}
     )
 
 

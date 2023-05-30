@@ -29,3 +29,6 @@ ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
 MAIL_USERNAME = os.environ['MAIL_USERNAME']
 MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
 MAIL_SANDBOX = False
+
+# captcha
+HCAPTCHA_SECRET = os.environ['HCAPTCHA_SECRET']
